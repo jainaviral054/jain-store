@@ -694,23 +694,29 @@ Object.keys(cart).forEach(id => {
   updateCartCount(); renderProducts(); closeCart(); loadOrderStats();
   showToast('✅ Order WhatsApp par bhej diya gaya!');
 }
-function loadOrders() {
+
+  function loadOrders() {
   const orders = JSON.parse(localStorage.getItem('jainOrders')||'[]');
   const mine = orders.filter(o => o.phone === currentUser?.p);
-  const el = document.getElementById('orders-list');
-  if(!mine.length) {
-    el.innerHTML = `<div class="empty-state"><div class="emo">📦</div><h3>कोई order नहीं</h3><p>अभी order करें!</p></div>`;
+  const el = document.getElementById('order-list');
+  
+  if(mine.length === 0) {
+    el.innerHTML = '<div style="text-align:center; padding:50px; color:#666;">Koi order nahi mila.</div>';
     return;
   }
-  el.innerHTML = mine.map((o,i) => `
-    <div class="order-card">
-      <div class="order-header">
-        <div class="order-id">${o.id}</div>
-        <div class="order-total">₹${o.total}</div>
+
+  el.innerHTML = mine.map(o => `
+    <div class="order-card" style="border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 10px;">
+      <div style="display:flex; justify-content:space-between; font-weight:800;">
+        <span>${o.id}</span>
+        <span style="color:var(--g)">₹${o.total}</span>
       </div>
-      <div class="order-date">📅 ${o.date}</div>
-      <div class="order-items">${o.items}</div>
-      <div><span class="order-status">✅ Delivered</span></div>
+      <div style="font-size:12px; color:#666; margin:5px 0;">📅 ${o.date}</div>
+      <div style="font-size:13px; margin-bottom:10px;">📦 ${o.items}</div>
+      
+      <button onclick="downloadInvoice('${o.id}')" style="width:100%; background:var(--g); color:white; border:none; padding:8px; border-radius:8px; cursor:pointer; font-weight:700;">
+        📥 Download Invoice (PDF)
+      </button>
     </div>`).join('');
 }
 
