@@ -651,17 +651,15 @@ function sendWA() {
   waMsg += `🏠 *Address:* ${addr}\n\n`;
   waMsg += `*Ordered Items:*\n`;
 
-  // Is loop ke andar quantity fix kar di gayi hai
-  Object.keys(cart).forEach(id => {
+Object.keys(cart).forEach(id => {
     if(!cart[id]) return;
     const p = products.find(x => x.id == id);
-    const qty = cart[id]; // Ye hai product ki quantity
+    const qty = cart[id];
     const subtotal = p.price * qty;
     itemTotal += subtotal;
-    
-    // Message mein Quantity (Qty) aise dikhegi
-waMsg += ✅ ${p.name} (${p.unit}) x ${qty} = ₹${subtotal}\n
-});
+    // Niche wali line check karein, aise hi honi chahiye:
+    waMsg += `✅ *${p.name}* (${p.unit}) x ${qty} = ₹${subtotal}\n`;
+  });
 
   if(itemTotal < 500) { showToast('Minimum order ₹500 hona chahiye'); return; }
 
