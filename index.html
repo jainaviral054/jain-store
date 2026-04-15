@@ -644,24 +644,34 @@ function sendWA() {
   if(!addr) { showToast('Address likhna zaroori hai!'); return; }
 
   let itemTotal = 0;
-  let waMsg = `*🛒 JAIN STORE LALITPUR*\n👤 ${currentUser.n}\n📞 ${currentUser.p}\n🏠 ${addr}\n\n*Items:*\n`;
+  // WhatsApp Message ka header
+  let waMsg = `*🛒 JAIN STORE LALITPUR*\n`;
+  waMsg += `👤 *Naam:* ${currentUser.n}\n`;
+  waMsg += `📞 *Phone:* ${currentUser.p}\n`;
+  waMsg += `🏠 *Address:* ${addr}\n\n`;
+  waMsg += `*Ordered Items:*\n`;
 
+  // Is loop ke andar quantity fix kar di gayi hai
   Object.keys(cart).forEach(id => {
     if(!cart[id]) return;
     const p = products.find(x => x.id == id);
-    const qty = cart[id];
+    const qty = cart[id]; // Ye hai product ki quantity
     const subtotal = p.price * qty;
     itemTotal += subtotal;
-    waMsg += `✅ ${p.name} x${qty} = ₹${subtotal}\n`;
+    
+    // Message mein Quantity (Qty) aise dikhegi
+    waMsg += `✅ ${p.name} [Qty: ${qty}] - ₹${subtotal}\n`;
   });
 
   if(itemTotal < 500) { showToast('Minimum order ₹500 hona chahiye'); return; }
 
   let delivery = itemTotal >= 500 ? 0 : 30;
   const grandTotal = itemTotal + delivery;
-  waMsg += `\n💰 *TOTAL: ₹${grandTotal}*`;
-  if(delivery === 0) waMsg += `\n🟢 Free Delivery`;
+  
+  waMsg += `\n💰 *Total Bill: ₹${grandTotal}*`;
+  if(delivery === 0) waMsg += `\n🟢 *Free Delivery*`;
 
+  // History mein save karne ke liye
   const orders = JSON.parse(localStorage.getItem('jainOrders')||'[]');
   orders.unshift({
     id: 'ORD' + Date.now(),
@@ -669,22 +679,21 @@ function sendWA() {
     total: grandTotal,
     items: Object.keys(cart).map(id => {
       const p = products.find(x=>x.id==id);
-      return `${p.name} x${cart[id]}`;
+      return `${p.name} (x${cart[id]})`; // History mein bhi qty
     }).join(', '),
     phone: currentUser.p,
     addr
   });
   localStorage.setItem('jainOrders', JSON.stringify(orders));
 
-  fetch(`${ADMIN_SHEET_URL}?n=${encodeURIComponent(currentUser.n)}&p=${encodeURIComponent(currentUser.p)}&act=ORDER&total=${grandTotal}&addr=${encodeURIComponent(addr)}`, {mode:'no-cors'}).catch(()=>{});
-
+  // WhatsApp open karein
   window.open(`https://wa.me/${SHOP_WA}?text=${encodeURIComponent(waMsg)}`);
 
+  // Cart clear karein
   cart = {}; 
   updateCartCount(); renderProducts(); closeCart(); loadOrderStats();
-  showToast('✅ Order WhatsApp पर भेजा गया!');
+  showToast('✅ Order WhatsApp par bhej diya gaya!');
 }
-
 function loadOrders() {
   const orders = JSON.parse(localStorage.getItem('jainOrders')||'[]');
   const mine = orders.filter(o => o.phone === currentUser?.p);
