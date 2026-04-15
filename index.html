@@ -660,8 +660,8 @@ function sendWA() {
     itemTotal += subtotal;
     
     // Message mein Quantity (Qty) aise dikhegi
-    waMsg += `✅ ${p.name} [Qty: ${qty}] - ₹${subtotal}\n`;
-  });
+ waMsg += `✅ ${p.name} x${qty} = ₹${subtotal}\n`; 
+});
 
   if(itemTotal < 500) { showToast('Minimum order ₹500 hona chahiye'); return; }
 
