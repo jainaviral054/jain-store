@@ -273,6 +273,125 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 .empty-state p { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 6px; }
 
 .no-match { padding: 30px 20px; text-align: center; font-weight: 700; color: var(--muted); }
+
+/* ===== ADMIN PANEL STYLES ===== */
+#admin-screen {
+  position: fixed; inset: 0; background: #f5f6fa; z-index: 8000;
+  display: none; flex-direction: column; overflow: hidden;
+}
+#admin-screen.open { display: flex; }
+.admin-topbar {
+  background: #1a1a2e; color: #fff; padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.admin-topbar h2 { font-size: 18px; font-weight: 900; }
+.admin-close-btn {
+  background: rgba(255,255,255,0.15); border: none; color: #fff;
+  border-radius: 8px; padding: 7px 14px; font-weight: 800; font-size: 13px; cursor: pointer;
+}
+.admin-tabs {
+  display: flex; background: #fff; border-bottom: 2px solid #eee; flex-shrink: 0;
+}
+.admin-tab {
+  flex: 1; padding: 13px 8px; text-align: center; font-size: 13px; font-weight: 800;
+  color: #888; cursor: pointer; border-bottom: 3px solid transparent; transition: .2s;
+}
+.admin-tab.active { color: var(--g); border-bottom-color: var(--g); }
+.admin-content { flex: 1; overflow-y: auto; padding: 16px; }
+
+/* Add Product Form */
+.admin-card {
+  background: #fff; border-radius: 14px; padding: 18px;
+  border: 1px solid #eee; margin-bottom: 14px;
+}
+.admin-card h3 { font-size: 15px; font-weight: 900; margin-bottom: 14px; color: #1a1a2e; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.form-row.full { grid-template-columns: 1fr; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label { font-size: 11px; font-weight: 800; color: #666; text-transform: uppercase; letter-spacing: .5px; }
+.form-group input, .form-group select, .form-group textarea {
+  border: 2px solid #eee; border-radius: 9px; padding: 10px 12px;
+  font-size: 14px; font-weight: 600; font-family: 'Nunito', sans-serif;
+  outline: none; transition: .2s; width: 100%;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--g); }
+
+/* Photo upload */
+.photo-upload-area {
+  border: 2px dashed #ccc; border-radius: 12px; padding: 20px;
+  text-align: center; cursor: pointer; transition: .2s; position: relative;
+  background: #fafafa;
+}
+.photo-upload-area:hover { border-color: var(--g); background: #f0faf0; }
+.photo-upload-area input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.photo-preview {
+  width: 80px; height: 80px; border-radius: 10px; object-fit: cover;
+  border: 2px solid var(--g); display: none; margin: 0 auto 8px;
+}
+.photo-upload-area .upload-icon { font-size: 32px; display: block; }
+.photo-upload-area p { font-size: 12px; font-weight: 700; color: #888; margin-top: 6px; }
+.photo-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+.photo-tab-btn {
+  flex: 1; padding: 8px; border-radius: 8px; border: 2px solid #eee;
+  font-size: 12px; font-weight: 800; cursor: pointer; background: #fff; transition: .2s;
+}
+.photo-tab-btn.active { border-color: var(--g); color: var(--g); background: #f0faf0; }
+
+.admin-save-btn {
+  background: var(--g); color: #fff; border: none; border-radius: 12px;
+  padding: 14px; font-size: 15px; font-weight: 900; width: 100%;
+  cursor: pointer; margin-top: 6px; transition: .2s;
+}
+.admin-save-btn:hover { background: var(--g2); }
+.admin-save-btn.danger { background: #e74c3c; }
+
+/* Product List in Admin */
+.admin-prod-item {
+  background: #fff; border-radius: 12px; border: 1px solid #eee;
+  padding: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px;
+}
+.admin-prod-img { width: 54px; height: 54px; border-radius: 9px; object-fit: cover; border: 1px solid #eee; flex-shrink: 0; }
+.admin-prod-info { flex: 1; min-width: 0; }
+.admin-prod-name { font-size: 14px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-prod-meta { font-size: 12px; color: #888; font-weight: 600; }
+.admin-prod-price { font-size: 14px; font-weight: 900; color: var(--g); }
+.admin-prod-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.edit-btn, .del-btn {
+  border: none; border-radius: 7px; padding: 6px 10px; font-size: 12px;
+  font-weight: 800; cursor: pointer;
+}
+.edit-btn { background: #e8f4fd; color: #2980b9; }
+.del-btn { background: #fdecea; color: #e74c3c; }
+
+/* CSV Upload */
+.csv-upload-area {
+  border: 2px dashed #ccc; border-radius: 12px; padding: 30px 20px;
+  text-align: center; cursor: pointer; transition: .2s; position: relative;
+  background: #fafafa; margin-bottom: 14px;
+}
+.csv-upload-area:hover { border-color: var(--g); }
+.csv-upload-area input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.csv-upload-area .csv-icon { font-size: 40px; display: block; }
+.csv-preview-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.csv-preview-table th { background: #1a1a2e; color: #fff; padding: 8px 6px; font-weight: 800; text-align: left; }
+.csv-preview-table td { padding: 7px 6px; border-bottom: 1px solid #f0f0f0; font-weight: 600; }
+.csv-preview-table tr:nth-child(even) td { background: #fafafa; }
+.csv-preview-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid #eee; margin-bottom: 12px; max-height: 280px; overflow-y: auto; }
+
+.cat-badge-admin {
+  display: inline-block; font-size: 10px; font-weight: 800; padding: 2px 8px;
+  border-radius: 6px; background: #e8f7ea; color: var(--g); margin-left: 4px;
+}
+.admin-login-screen {
+  position: fixed; inset: 0; background: #1a1a2e; z-index: 9000;
+  display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px;
+}
+.admin-login-screen.open { display: flex; }
+.admin-login-box { background: #fff; border-radius: 18px; padding: 30px 24px; width: 100%; max-width: 340px; }
+.admin-login-box h2 { font-size: 22px; font-weight: 900; text-align: center; margin-bottom: 6px; color: #1a1a2e; }
+.admin-login-box p { text-align: center; font-size: 12px; color: #888; margin-bottom: 20px; }
+.import-ok-row { display: flex; align-items: center; justify-content: space-between; background: #e8f7ea; border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; }
+.import-ok-row span { font-size: 13px; font-weight: 800; color: var(--g); }
 </style>
 </head>
 <body>
@@ -415,6 +534,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
       <div class="profile-opt danger" onclick="logout()">
         <span class="opt-icon">🚪</span> Logout
       </div>
+      <div class="profile-opt" onclick="openAdminLogin()" style="margin-top:8px; border-color:#e0e0e0; color:#888;">
+        <span class="opt-icon">⚙️</span> Admin Panel <span class="opt-arrow">›</span>
+      </div>
     </div>
   </div>
 
@@ -455,6 +577,191 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ADMIN LOGIN -->
+<div class="admin-login-screen" id="admin-login-screen">
+  <div class="admin-login-box">
+    <h2>🔐 Admin Login</h2>
+    <p>Sirf store owner ke liye</p>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Admin Password</label>
+      <input type="password" id="admin-pass-inp" class="inp" placeholder="Password daalo..." onkeydown="if(event.key==='Enter') checkAdminPass()">
+    </div>
+    <button class="admin-save-btn" onclick="checkAdminPass()">🚀 Admin Panel Kholein</button>
+    <button class="admin-save-btn danger" style="margin-top:8px;" onclick="closeAdminLogin()">✕ Wapas Jaao</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-screen">
+  <div class="admin-topbar">
+    <h2>⚙️ Jain Store Admin</h2>
+    <button class="admin-close-btn" onclick="closeAdmin()">✕ Close</button>
+  </div>
+  <div class="admin-tabs">
+    <div class="admin-tab active" id="atab-add" onclick="switchAdminTab('add')">➕ Product Add</div>
+    <div class="admin-tab" id="atab-list" onclick="switchAdminTab('list')">📋 Product List</div>
+    <div class="admin-tab" id="atab-csv" onclick="switchAdminTab('csv')">📊 Bulk CSV</div>
+  </div>
+
+  <!-- TAB: Add Product -->
+  <div class="admin-content" id="apanel-add">
+    <div class="admin-card">
+      <h3>➕ Naya Product Add Karein</h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input type="text" id="af-name" placeholder="Jaise: Premium Kaju">
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="af-cat">
+            <option value="dry">Dry Fruits</option>
+            <option value="Mirch-Masala">Mirch-Masala</option>
+            <option value="Pulses & Rice">Pulses & Rice</option>
+            <option value="Soap & detergent">Soap & Detergent</option>
+            <option value="oil">Oil & Ghee</option>
+            <option value="Vegetables">Vegetables</option>
+            <option value="Fruits">Fruits</option>
+            <option value="seeds">Seeds</option>
+            <option value="sweets">Sweets</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Sale Price (₹) *</label>
+          <input type="number" id="af-price" placeholder="200">
+        </div>
+        <div class="form-group">
+          <label>MRP / Original Price (₹)</label>
+          <input type="number" id="af-mrp" placeholder="350">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Unit / Weight</label>
+          <input type="text" id="af-unit" placeholder="250g / 500ml / 1kg">
+        </div>
+        <div class="form-group">
+          <label>Badge</label>
+          <select id="af-badge">
+            <option value="">Koi nahi</option>
+            <option value="best">Best Seller</option>
+            <option value="off">Discount Off</option>
+            <option value="new">New</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Rating (1-5)</label>
+          <input type="number" id="af-rating" placeholder="4.5" min="1" max="5" step="0.1">
+        </div>
+        <div class="form-group">
+          <label>Reviews Count</label>
+          <input type="number" id="af-reviews" placeholder="100">
+        </div>
+      </div>
+
+      <!-- Photo Upload Section -->
+      <div class="form-group" style="margin-bottom:10px;">
+        <label>Product Photo *</label>
+        <div class="photo-tabs">
+          <button class="photo-tab-btn active" id="ptab-upload" onclick="switchPhotoTab('upload')">📷 Phone se Upload</button>
+          <button class="photo-tab-btn" id="ptab-url" onclick="switchPhotoTab('url')">🔗 Image URL</button>
+        </div>
+
+        <div id="photo-section-upload">
+          <div class="photo-upload-area" id="photo-drop-area">
+            <input type="file" id="af-img-file" accept="image/*" onchange="handlePhotoUpload(this)">
+            <img class="photo-preview" id="photo-preview-img">
+            <span class="upload-icon" id="upload-icon-el">📸</span>
+            <p id="upload-text">Tap karke photo select karein<br><small style="color:#aaa;">JPG, PNG, WEBP</small></p>
+          </div>
+        </div>
+
+        <div id="photo-section-url" style="display:none;">
+          <input type="url" id="af-img-url" placeholder="https://example.com/image.jpg" oninput="previewUrlImage(this.value)" style="border:2px solid #eee; border-radius:9px; padding:10px 12px; font-size:14px; font-weight:600; width:100%; margin-bottom:8px; font-family:Nunito,sans-serif; outline:none;">
+          <img id="url-preview-img" src="" style="display:none; width:80px; height:80px; border-radius:10px; object-fit:cover; border:2px solid var(--g);">
+        </div>
+      </div>
+
+      <button class="admin-save-btn" onclick="saveProduct()" id="save-prod-btn">💾 Product Save Karein</button>
+      <input type="hidden" id="af-edit-id" value="">
+    </div>
+  </div>
+
+  <!-- TAB: Product List -->
+  <div class="admin-content" id="apanel-list" style="display:none;">
+    <div class="admin-card" style="padding:12px 14px; display:flex; align-items:center; gap:10px;">
+      <input type="text" id="admin-search" placeholder="🔍 Product dhundhein..." oninput="renderAdminList()" style="flex:1; border:2px solid #eee; border-radius:9px; padding:9px 12px; font-size:13px; font-family:Nunito,sans-serif; font-weight:600; outline:none;">
+      <select id="admin-cat-filter" onchange="renderAdminList()" style="border:2px solid #eee; border-radius:9px; padding:9px 10px; font-size:13px; font-family:Nunito,sans-serif; font-weight:700; outline:none;">
+        <option value="all">Sab</option>
+        <option value="dry">Dry Fruits</option>
+        <option value="Mirch-Masala">Masala</option>
+        <option value="Pulses & Rice">Pulses</option>
+        <option value="Soap & detergent">Soap</option>
+        <option value="oil">Oil</option>
+        <option value="Vegetables">Vegetables</option>
+        <option value="Fruits">Fruits</option>
+        <option value="seeds">Seeds</option>
+        <option value="sweets">Sweets</option>
+      </select>
+    </div>
+    <div id="admin-prod-list"></div>
+  </div>
+
+  <!-- TAB: CSV Bulk Upload -->
+  <div class="admin-content" id="apanel-csv" style="display:none;">
+    <div class="admin-card">
+      <h3>📊 CSV/Excel se Bulk Upload</h3>
+      <p style="font-size:12px; color:#888; font-weight:600; margin-bottom:14px;">
+        Pehle sample CSV download karein, usme data bharein, phir upload karein.
+      </p>
+
+      <button class="admin-save-btn" style="background:#2980b9; margin-bottom:12px;" onclick="downloadSampleCSV()">
+        ⬇️ Sample CSV Template Download Karein
+      </button>
+
+      <div style="background:#fff8e1; border-radius:10px; padding:12px; margin-bottom:14px; border-left:4px solid #f8c200;">
+        <p style="font-size:12px; font-weight:800; color:#555;">📋 CSV Column Format:</p>
+        <p style="font-size:11px; color:#777; font-weight:600; margin-top:4px;">
+          name, price, mrp, unit, cat, badge, img_url, rating, reviews
+        </p>
+        <p style="font-size:11px; color:#999; margin-top:6px;">
+          • <b>cat values:</b> dry, Mirch-Masala, Pulses &amp; Rice, oil, seeds, sweets, Soap &amp; detergent, Vegetables, Fruits<br>
+          • <b>badge values:</b> best, off, new (ya khali)<br>
+          • <b>img_url:</b> image ka link (phone upload ke liye khali rakh sakte hain)
+        </p>
+      </div>
+
+      <div class="csv-upload-area">
+        <input type="file" id="csv-file-inp" accept=".csv,.xlsx,.xls" onchange="handleCSVUpload(this)">
+        <span class="csv-icon">📂</span>
+        <p style="font-size:13px; font-weight:800; color:#555; margin-top:8px;">CSV ya Excel file yahan drop karein</p>
+        <p style="font-size:11px; color:#aaa; font-weight:600;">ya tap karke select karein</p>
+      </div>
+
+      <div id="csv-preview-section" style="display:none;">
+        <div class="import-ok-row">
+          <span id="csv-count-msg">0 products ready to import</span>
+          <button class="admin-save-btn" style="width:auto; padding:8px 16px; margin:0;" onclick="importCSVProducts()">✅ Import Karein</button>
+        </div>
+        <div class="csv-preview-wrap">
+          <table class="csv-preview-table" id="csv-preview-table">
+            <thead><tr><th>Name</th><th>Price</th><th>MRP</th><th>Unit</th><th>Category</th><th>Badge</th></tr></thead>
+            <tbody id="csv-preview-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 const SHOP_WA = "919260903360";
@@ -754,7 +1061,319 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'), 2500);
 }
 
-window.onload = () => {
+// ===== ADMIN PANEL LOGIC =====
+const ADMIN_PASSWORD = "jain@admin123"; // 🔑 Apna password yahan change karein
+let csvParsedProducts = [];
+let currentPhotoTab = 'upload';
+let uploadedImgBase64 = '';
+let editingProductId = null;
+
+function openAdminLogin() {
+  document.getElementById('admin-login-screen').classList.add('open');
+  setTimeout(() => document.getElementById('admin-pass-inp').focus(), 100);
+}
+function closeAdminLogin() {
+  document.getElementById('admin-login-screen').classList.remove('open');
+  document.getElementById('admin-pass-inp').value = '';
+}
+function checkAdminPass() {
+  const pass = document.getElementById('admin-pass-inp').value;
+  if(pass === ADMIN_PASSWORD) {
+    closeAdminLogin();
+    openAdmin();
+  } else {
+    showToast('❌ Galat password!');
+    document.getElementById('admin-pass-inp').value = '';
+  }
+}
+function openAdmin() {
+  document.getElementById('admin-screen').classList.add('open');
+  switchAdminTab('add');
+}
+function closeAdmin() {
+  document.getElementById('admin-screen').classList.remove('open');
+}
+function switchAdminTab(tab) {
+  ['add','list','csv'].forEach(t => {
+    document.getElementById('apanel-'+t).style.display = t===tab ? 'block' : 'none';
+    document.getElementById('atab-'+t).classList.toggle('active', t===tab);
+  });
+  if(tab === 'list') renderAdminList();
+}
+
+// Photo Tab
+function switchPhotoTab(tab) {
+  currentPhotoTab = tab;
+  document.getElementById('photo-section-upload').style.display = tab==='upload' ? 'block' : 'none';
+  document.getElementById('photo-section-url').style.display = tab==='url' ? 'block' : 'none';
+  document.getElementById('ptab-upload').classList.toggle('active', tab==='upload');
+  document.getElementById('ptab-url').classList.toggle('active', tab==='url');
+}
+function handlePhotoUpload(inp) {
+  const file = inp.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    uploadedImgBase64 = e.target.result;
+    const prev = document.getElementById('photo-preview-img');
+    prev.src = uploadedImgBase64;
+    prev.style.display = 'block';
+    document.getElementById('upload-icon-el').style.display = 'none';
+    document.getElementById('upload-text').textContent = file.name;
+  };
+  reader.readAsDataURL(file);
+}
+function previewUrlImage(url) {
+  const img = document.getElementById('url-preview-img');
+  if(url) { img.src = url; img.style.display = 'block'; }
+  else { img.style.display = 'none'; }
+}
+
+// Get final image src
+function getFinalImgSrc() {
+  if(currentPhotoTab === 'upload' && uploadedImgBase64) return uploadedImgBase64;
+  if(currentPhotoTab === 'url') {
+    const u = document.getElementById('af-img-url').value.trim();
+    if(u) return u;
+  }
+  return 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80';
+}
+
+// Load products from localStorage (merge with default)
+function getAllProducts() {
+  const stored = JSON.parse(localStorage.getItem('jainProducts') || 'null');
+  return stored || products;
+}
+function saveAllProducts(arr) {
+  localStorage.setItem('jainProducts', JSON.stringify(arr));
+  // Refresh main products array
+  products.length = 0;
+  arr.forEach(p => products.push(p));
+  renderProducts();
+}
+
+// Save / Update product
+function saveProduct() {
+  const name = document.getElementById('af-name').value.trim();
+  const price = parseFloat(document.getElementById('af-price').value);
+  const mrp = parseFloat(document.getElementById('af-mrp').value) || price;
+  const unit = document.getElementById('af-unit').value.trim() || '1 unit';
+  const cat = document.getElementById('af-cat').value;
+  const badge = document.getElementById('af-badge').value;
+  const rating = parseFloat(document.getElementById('af-rating').value) || 4.5;
+  const reviews = parseInt(document.getElementById('af-reviews').value) || 50;
+  const img = getFinalImgSrc();
+  const editId = document.getElementById('af-edit-id').value;
+
+  if(!name || !price) { showToast('❌ Naam aur price zaroori hain!'); return; }
+
+  const allProds = getAllProducts();
+  if(editId) {
+    // Update existing
+    const idx = allProds.findIndex(p => p.id == editId);
+    if(idx !== -1) {
+      allProds[idx] = { ...allProds[idx], name, price, mrp, unit, cat, badge, rating, reviews, img };
+      showToast('✅ Product update ho gaya!');
+    }
+  } else {
+    const newId = Date.now();
+    allProds.push({ id: newId, name, price, mrp, unit, cat, badge, img, rating, reviews });
+    showToast('✅ Product add ho gaya!');
+  }
+
+  saveAllProducts(allProds);
+  resetProductForm();
+}
+
+function resetProductForm() {
+  ['af-name','af-price','af-mrp','af-unit','af-img-url','af-rating','af-reviews'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.getElementById('af-cat').value = 'dry';
+  document.getElementById('af-badge').value = '';
+  document.getElementById('af-edit-id').value = '';
+  document.getElementById('photo-preview-img').style.display = 'none';
+  document.getElementById('upload-icon-el').style.display = 'block';
+  document.getElementById('upload-text').textContent = 'Tap karke photo select karein';
+  document.getElementById('url-preview-img').style.display = 'none';
+  document.getElementById('af-img-file').value = '';
+  uploadedImgBase64 = '';
+  document.getElementById('save-prod-btn').textContent = '💾 Product Save Karein';
+}
+
+// Edit product
+function editProduct(id) {
+  const p = getAllProducts().find(x => x.id == id);
+  if(!p) return;
+  switchAdminTab('add');
+  document.getElementById('af-name').value = p.name;
+  document.getElementById('af-price').value = p.price;
+  document.getElementById('af-mrp').value = p.mrp;
+  document.getElementById('af-unit').value = p.unit;
+  document.getElementById('af-cat').value = p.cat;
+  document.getElementById('af-badge').value = p.badge || '';
+  document.getElementById('af-rating').value = p.rating;
+  document.getElementById('af-reviews').value = p.reviews;
+  document.getElementById('af-edit-id').value = p.id;
+  document.getElementById('save-prod-btn').textContent = '✏️ Product Update Karein';
+  // Show image
+  if(p.img && p.img.startsWith('data:')) {
+    switchPhotoTab('upload');
+    uploadedImgBase64 = p.img;
+    const prev = document.getElementById('photo-preview-img');
+    prev.src = p.img; prev.style.display = 'block';
+    document.getElementById('upload-icon-el').style.display = 'none';
+  } else if(p.img) {
+    switchPhotoTab('url');
+    document.getElementById('af-img-url').value = p.img;
+    previewUrlImage(p.img);
+  }
+}
+
+// Delete product
+function deleteProduct(id) {
+  if(!confirm('Kya aap is product ko delete karna chahte hain?')) return;
+  const allProds = getAllProducts().filter(p => p.id != id);
+  saveAllProducts(allProds);
+  renderAdminList();
+  showToast('🗑️ Product delete ho gaya!');
+}
+
+// Render admin product list
+function renderAdminList() {
+  const q = (document.getElementById('admin-search')?.value || '').toLowerCase();
+  const cat = document.getElementById('admin-cat-filter')?.value || 'all';
+  const allProds = getAllProducts().filter(p => {
+    const catOk = cat === 'all' || p.cat === cat;
+    const searchOk = !q || p.name.toLowerCase().includes(q);
+    return catOk && searchOk;
+  });
+  const el = document.getElementById('admin-prod-list');
+  if(!allProds.length) {
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:#aaa;font-weight:700;">Koi product nahi mila</div>';
+    return;
+  }
+  el.innerHTML = allProds.map(p => `
+    <div class="admin-prod-item">
+      <img class="admin-prod-img" src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=100'">
+      <div class="admin-prod-info">
+        <div class="admin-prod-name">${p.name} <span class="cat-badge-admin">${p.cat}</span></div>
+        <div class="admin-prod-meta">${p.unit} • ⭐${p.rating}</div>
+        <div class="admin-prod-price">₹${p.price} <span style="text-decoration:line-through;color:#aaa;font-size:11px;font-weight:600;">₹${p.mrp}</span></div>
+      </div>
+      <div class="admin-prod-actions">
+        <button class="edit-btn" onclick="editProduct(${p.id})">✏️</button>
+        <button class="del-btn" onclick="deleteProduct(${p.id})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== CSV BULK UPLOAD =====
+function downloadSampleCSV() {
+  const header = 'name,price,mrp,unit,cat,badge,img_url,rating,reviews';
+  const rows = [
+    'Premium Kaju,200,350,250g,dry,best,https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400,4.8,128',
+    'Lal Mirch Powder,55,70,200g,Mirch-Masala,off,,4.6,200',
+    'Arhar Dal,90,110,1kg,Pulses & Rice,new,,4.7,150',
+    'Surf Excel,120,140,500g,Soap & detergent,best,,4.5,80',
+  ];
+  const csv = [header, ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'jain_store_products_template.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function handleCSVUpload(inp) {
+  const file = inp.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const text = e.target.result;
+    parseCSV(text);
+  };
+  reader.readAsText(file);
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n').filter(l => l.trim());
+  if(lines.length < 2) { showToast('❌ CSV mein data nahi hai'); return; }
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+  const nameIdx = headers.indexOf('name');
+  const priceIdx = headers.indexOf('price');
+  const mrpIdx = headers.indexOf('mrp');
+  const unitIdx = headers.indexOf('unit');
+  const catIdx = headers.indexOf('cat');
+  const badgeIdx = headers.indexOf('badge');
+  const imgIdx = headers.indexOf('img_url');
+  const ratingIdx = headers.indexOf('rating');
+  const reviewsIdx = headers.indexOf('reviews');
+
+  if(nameIdx === -1 || priceIdx === -1) {
+    showToast('❌ CSV mein name aur price column hona chahiye'); return;
+  }
+
+  csvParsedProducts = [];
+  const bodyEl = document.getElementById('csv-preview-body');
+  bodyEl.innerHTML = '';
+
+  for(let i = 1; i < lines.length; i++) {
+    // Handle commas inside quotes
+    const cols = lines[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || lines[i].split(',');
+    const clean = cols.map(c => c.replace(/^"|"$/g,'').trim());
+    const name = clean[nameIdx] || '';
+    if(!name) continue;
+    const price = parseFloat(clean[priceIdx]) || 0;
+    const mrp = mrpIdx !== -1 ? (parseFloat(clean[mrpIdx]) || price) : price;
+    const unit = unitIdx !== -1 ? (clean[unitIdx] || '1 unit') : '1 unit';
+    const cat = catIdx !== -1 ? (clean[catIdx] || 'dry') : 'dry';
+    const badge = badgeIdx !== -1 ? (clean[badgeIdx] || '') : '';
+    const img = imgIdx !== -1 ? (clean[imgIdx] || '') : '';
+    const rating = ratingIdx !== -1 ? (parseFloat(clean[ratingIdx]) || 4.5) : 4.5;
+    const reviews = reviewsIdx !== -1 ? (parseInt(clean[reviewsIdx]) || 50) : 50;
+    const finalImg = img || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80';
+    const prod = { id: Date.now() + i, name, price, mrp, unit, cat, badge, img: finalImg, rating, reviews };
+    csvParsedProducts.push(prod);
+    bodyEl.innerHTML += `<tr>
+      <td><b>${name}</b></td>
+      <td>₹${price}</td>
+      <td>₹${mrp}</td>
+      <td>${unit}</td>
+      <td><span class="cat-badge-admin">${cat}</span></td>
+      <td>${badge || '-'}</td>
+    </tr>`;
+  }
+
+  if(csvParsedProducts.length === 0) { showToast('❌ Koi valid product nahi mila'); return; }
+  document.getElementById('csv-count-msg').textContent = `${csvParsedProducts.length} products ready to import`;
+  document.getElementById('csv-preview-section').style.display = 'block';
+}
+
+function importCSVProducts() {
+  if(!csvParsedProducts.length) return;
+  const allProds = getAllProducts();
+  csvParsedProducts.forEach(p => allProds.push(p));
+  saveAllProducts(allProds);
+  showToast(`✅ ${csvParsedProducts.length} products import ho gaye!`);
+  document.getElementById('csv-preview-section').style.display = 'none';
+  document.getElementById('csv-file-inp').value = '';
+  csvParsedProducts = [];
+  switchAdminTab('list');
+}
+
+// On app load, merge saved products
+window.addEventListener('load', () => {
+  const stored = localStorage.getItem('jainProducts');
+  if(stored) {
+    const arr = JSON.parse(stored);
+    products.length = 0;
+    arr.forEach(p => products.push(p));
+  }
+});
+</script>
   const saved = localStorage.getItem('jainUser');
   if(saved) initApp(JSON.parse(saved));
 
