@@ -699,31 +699,34 @@ localStorage.setItem('jainOrders', JSON.stringify(orders));
 }
 
 function loadOrders() {
-  const el = document.getElementById('order-list');
-  if(!el) return;
+    const el = document.getElementById('order-list');
+    if(!el) return;
 
-  const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
-  // Check karein ki user logged in hai ya nahi
-  const user = currentUser || JSON.parse(localStorage.getItem('jainUser') || '{}');
-  const mine = orders.filter(o => o.phone === user.p);
+    const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
+    // Login user ka phone nikalne ka sabse pakka tarika
+    const user = currentUser || JSON.parse(localStorage.getItem('jainUser') || '{}');
+    
+    // Filter: Phone number match hona chahiye
+    const mine = orders.filter(o => o.phone === user.p);
 
-  if (mine.length === 0) {
-    el.innerHTML = `<div style="text-align:center; padding:50px; color:#666;">Koi order history nahi mili.</div>`;
-    return;
-  }
+    if (mine.length === 0) {
+        el.innerHTML = '<div style="text-align:center; padding:40px; color:#999;">Koi order nahi mila. Naya order karke dekhein.</div>';
+        return;
+    }
 
-  el.innerHTML = mine.map(o => `
-    <div class="order-card" style="background:#fff; border:1px solid #eee; padding:15px; border-radius:12px; margin-bottom:10px;">
-      <div style="display:flex; justify-content:space-between; font-weight:800;">
-        <span>🆔 ${o.id}</span>
-        <span style="color:var(--g)">₹${o.total}</span>
-      </div>
-      <div style="font-size:12px; color:#666; margin:5px 0;">📅 ${o.date}</div>
-      <div style="font-size:13px; margin-bottom:10px;">📦 ${o.items}</div>
-      <button onclick="downloadInvoice('${o.id}')" style="width:100%; background:var(--g); color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:700;">
-        📥 Download Invoice (PDF)
-      </button>
-    </div>`).join('');
+    el.innerHTML = mine.map(o => `
+        <div class="order-card" style="background:#fff; border:1px solid #eee; padding:15px; border-radius:12px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; font-weight:bold;">
+                <span>🆔 ${o.id}</span>
+                <span style="color:var(--g)">₹${o.total}</span>
+            </div>
+            <p style="font-size:12px; color:#666; margin:5px 0;">📅 ${o.date}</p>
+            <p style="font-size:13px;">📦 ${o.items}</p>
+            <button onclick="downloadInvoice('${o.id}')" style="width:100%; background:var(--g); color:white; border:none; padding:8px; border-radius:8px; cursor:pointer; margin-top:10px;">
+                Download Invoice (PDF)
+            </button>
+        </div>
+    `).join('');
 }
 
   function downloadInvoice(orderId) {
