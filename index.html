@@ -779,38 +779,53 @@ window.onload = () => {
     track.scrollTo({left: idx * (w+12), behavior:'smooth'});
   }, 4000);
 };
-  function downloadInvoice(orderId) {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  
-  const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
-  const o = orders.find(x => x.id === orderId);
-  
-  if(!o) return alert("Order data nahi mila!");
 
-  // Invoice Design
-  doc.setFontSize(22);
-  doc.setTextColor(12, 131, 31); // Store Color (Green)
-  doc.text("JAIN STORE LALITPUR", 14, 20);
-  
-  doc.setFontSize(10);
-  doc.setTextColor(0, 0, 0);
-  doc.text(`Invoice No: ${o.id}`, 14, 30);
-  doc.text(`Date: ${o.date}`, 14, 35);
-  doc.text(`Customer: ${currentUser.n}`, 14, 40);
-  doc.text(`Address: ${o.addr}`, 14, 45);
+function downloadInvoice(orderId) {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
+    const o = orders.find(x => x.id === orderId);
+    
+    if(!o) return alert("Order data nahi mila!");
 
-  // Table
-  doc.autoTable({
-    startY: 55,
-    head: [['Description', 'Total Amount']],
-    body: [[o.items, `Rs. ${o.total}`]],
-    theme: 'striped',
-    headStyles: { fillColor: [12, 131, 31] }
-  });
+    // User details handle karne ke liye
+    const userName = (typeof currentUser !== 'undefined' && currentUser.n) ? currentUser.n : "Customer";
 
-  doc.text("Thank you for your order!", 14, doc.lastAutoTable.finalY + 10);
-  doc.save(`Invoice_${o.id}.pdf`);
+    doc.setFontSize(22);
+    doc.setTextColor(12, 131, 31); 
+    doc.text("JAIN STORE LALITPUR", 14, 20);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Invoice No: ${o.id}`, 14, 30);
+    doc.text(`Date: ${o.date}`, 14, 35);
+    doc.text(`Customer: ${userName}`, 14, 40);
+    doc.text(`Address: ${o.addr || 'Lalitpur'}`, 14, 45);
+
+    // Table Logic
+    if (doc.autoTable) {
+      doc.autoTable({
+        startY: 55,
+        head: [['Description', 'Total Amount']],
+        body: [[o.items, `Rs. ${o.total}`]],
+        theme: 'striped',
+        headStyles: { fillColor: [12, 131, 31] }
+      });
+    } else {
+      // Agar autotable load na ho toh simple text
+      doc.text(`Items: ${o.items}`, 14, 60);
+      doc.text(`Total: Rs. ${o.total}`, 14, 70);
+    }
+
+    const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : 80;
+    doc.text("Thank you for your order!", 14, finalY + 10);
+    doc.save(`Invoice_${o.id}.pdf`);
+  } catch (err) {
+    console.error(err);
+    alert("PDF banane mein problem aayi, kripya page refresh karein.");
+  }
 }
 </script>
 </body>
