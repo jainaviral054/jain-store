@@ -672,19 +672,22 @@ Object.keys(cart).forEach(id => {
   if(delivery === 0) waMsg += `\n🟢 *Free Delivery*`;
 
   // History mein save karne ke liye
-  const orders = JSON.parse(localStorage.getItem('jainOrders')||'[]');
-  orders.unshift({
+const orderData = {
     id: 'ORD' + Date.now(),
-    date: new Date().toLocaleString('hi-IN'),
-    total: grandTotal,
-    items: Object.keys(cart).map(id => {
-      const p = products.find(x=>x.id==id);
-      return `${p.name} (x${cart[id]})`; // History mein bhi qty
+    date: new Date().toLocaleString(),
+    items: Object.keys(cart).filter(id => cart[id] > 0).map(id => {
+        const p = products.find(x => x.id == id);
+        return `${p.name} (${p.unit}) x ${cart[id]}`;
     }).join(', '),
-    phone: currentUser.p,
-    addr
-  });
-  localStorage.setItem('jainOrders', JSON.stringify(orders));
+    total: itemTotal,
+    phone: currentUser ? currentUser.p : JSON.parse(localStorage.getItem('jainUser') || '{}').p, // Phone number yahan se aayega
+    addr: document.getElementById('address').value
+};
+
+// LocalStorage mein save karein
+const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
+orders.push(orderData);
+localStorage.setItem('jainOrders', JSON.stringify(orders));
 
   // WhatsApp open karein
   window.open(`https://wa.me/${SHOP_WA}?text=${encodeURIComponent(waMsg)}`);
