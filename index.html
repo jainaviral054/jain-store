@@ -1397,9 +1397,11 @@ function downloadInvoice(orderId) {
     
     if(!o) return alert("Order data nahi mila!");
 
-    // User details handle karne ke liye
-    const userName = (typeof currentUser !== 'undefined' && currentUser.n) ? currentUser.n : "Customer";
+    // User data nikalne ka safer tareeka
+    const savedUser = JSON.parse(localStorage.getItem('jainUser') || '{}');
+    const userName = savedUser.n || "Customer";
 
+    // Header
     doc.setFontSize(22);
     doc.setTextColor(12, 131, 31); 
     doc.text("JAIN STORE LALITPUR", 14, 20);
@@ -1407,31 +1409,39 @@ function downloadInvoice(orderId) {
     doc.setFontSize(10);
     doc.setTextColor(0, 0, 0);
     doc.text(`Invoice No: ${o.id}`, 14, 30);
-    doc.text(`Date: ${o.date}`, 14, 35);
+    doc.text(`Date: ${o.date || new Date().toLocaleDateString()}`, 14, 35);
     doc.text(`Customer: ${userName}`, 14, 40);
     doc.text(`Address: ${o.addr || 'Lalitpur'}`, 14, 45);
 
-    // Table Logic
+    // Table Logic: Har item ke liye alag row banana
     if (doc.autoTable) {
+      // Agar o.items string hai toh use array jaisa dikhayein, 
+      // agar pehle se array hai toh use map karein
+      const tableBody = Array.isArray(o.items) 
+        ? o.items.map(item => [item.name || item, `Rs. ${item.price || o.total}`])
+        : [[o.items, `Rs. ${o.total}`]];
+
       doc.autoTable({
         startY: 55,
-        head: [['Description', 'Total Amount']],
-        body: [[o.items, `Rs. ${o.total}`]],
+        head: [['Description', 'Amount']],
+        body: tableBody,
         theme: 'striped',
-        headStyles: { fillColor: [12, 131, 31] }
+        headStyles: { fillColor: [12, 131, 31] },
+        styles: { fontSize: 10 }
       });
     } else {
-      // Agar autotable load na ho toh simple text
-      doc.text(`Items: ${o.items}`, 14, 60);
+      doc.text(`Items: ${JSON.stringify(o.items)}`, 14, 60);
       doc.text(`Total: Rs. ${o.total}`, 14, 70);
     }
 
     const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : 80;
-    doc.text("Thank you for your order!", 14, finalY + 10);
+    doc.setFontSize(12);
+    doc.text("Thank you for your order!", 14, finalY + 15);
+    
     doc.save(`Invoice_${o.id}.pdf`);
   } catch (err) {
-    console.error(err);
-    alert("PDF banane mein problem aayi, kripya page refresh karein.");
+    console.error("PDF Error:", err);
+    alert("PDF banane mein problem aayi. Console check karein.");
   }
 }
 </script>
