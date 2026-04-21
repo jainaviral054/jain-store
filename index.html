@@ -247,7 +247,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 .profile-opt {
   display: flex; align-items: center; gap: 14px; background: #fff;
   padding: 16px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 14px;
-  border: 1px solid var(--border); transition: .15s;
+  border: 1px solid var(--border); transition: .15px;
 }
 .profile-opt:hover { background: #f8f8f8; }
 .profile-opt .opt-icon { font-size: 22px; width: 32px; text-align: center; }
@@ -299,7 +299,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 .admin-tab.active { color: var(--g); border-bottom-color: var(--g); }
 .admin-content { flex: 1; overflow-y: auto; padding: 16px; }
 
-/* Add Product Form */
 .admin-card {
   background: #fff; border-radius: 14px; padding: 18px;
   border: 1px solid #eee; margin-bottom: 14px;
@@ -316,7 +315,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--g); }
 
-/* Photo upload */
 .photo-upload-area {
   border: 2px dashed #ccc; border-radius: 12px; padding: 20px;
   text-align: center; cursor: pointer; transition: .2s; position: relative;
@@ -345,7 +343,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 .admin-save-btn:hover { background: var(--g2); }
 .admin-save-btn.danger { background: #e74c3c; }
 
-/* Product List in Admin */
 .admin-prod-item {
   background: #fff; border-radius: 12px; border: 1px solid #eee;
   padding: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px;
@@ -363,7 +360,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 .edit-btn { background: #e8f4fd; color: #2980b9; }
 .del-btn { background: #fdecea; color: #e74c3c; }
 
-/* CSV Upload */
 .csv-upload-area {
   border: 2px dashed #ccc; border-radius: 12px; padding: 30px 20px;
   text-align: center; cursor: pointer; transition: .2s; position: relative;
@@ -455,37 +451,37 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
     <div class="section-title">🗂️ Categories</div>
     <div class="cats-track" id="cats-track">
       <div class="cat-chip active" data-cat="all" onclick="filterCat('all', this)">
-        <div class="cat-icon" style="background:#e8f7ea;">🛒</div>
+        <div class="cat-icon" style="background:#e8f7ea; font-size:28px;">🛒</div>
         <div class="cat-label">All</div>
       </div>
       <div class="cat-chip" data-cat="dry" onclick="filterCat('dry', this)">
-        <div class="cat-icon" style="background:#e8eaf6;"><img src="Dry fruit.png" style="width:100%; height:100%; object-fit:cover;"></div>
+        <div class="cat-icon" style="background:#e8eaf6; font-size:28px;">🥜</div>
         <div class="cat-label">Dry Fruits</div>
       </div>
       <div class="cat-chip" data-cat="Mirch-Masala" onclick="filterCat('Mirch-Masala', this)">
-        <div class="cat-icon" style="background:#fce4ec;">🌶️</div>
+        <div class="cat-icon" style="background:#fce4ec; font-size:28px;">🌶️</div>
         <div class="cat-label">Mirch-Masala</div>
       </div>
       <div class="cat-chip" data-cat="Pulses & Rice" onclick="filterCat('Pulses & Rice', this)">
-        <div class="cat-icon" style="background:#e8eaf6;"><img src="rice.PNG" style="width:100%; height:100%; object-fit:cover;"></div>
+        <div class="cat-icon" style="background:#e8eaf6; font-size:28px;">🌾</div>
         <div class="cat-label">Pulses & Rice</div>
       </div>
       <div class="cat-chip" data-cat="Soap & detergent" onclick="filterCat('Soap & detergent', this)">
-        <div class="cat-icon" style="background:#f3e5f5;">🍬</div>
+        <div class="cat-icon" style="background:#f3e5f5; font-size:28px;">🧴</div>
         <div class="cat-label">Soap & detergent</div>
       </div>
       <div class="cat-chip" data-cat="oil" onclick="filterCat('oil', this)">
-        <div class="cat-icon" style="background:#fffde7;">🫙</div>
+        <div class="cat-icon" style="background:#fffde7; font-size:28px;">🛢️</div>
         <div class="cat-label">Oil & Ghee</div>
       </div>
       <div class="cat-chip" data-cat="Vegetables" onclick="filterCat('Vegetables', this)">
-        <div class="cat-icon" style="background:#fffde7;">🫙</div>
+        <div class="cat-icon" style="background:#e8f5e9; font-size:28px;">🥦</div>
         <div class="cat-label">Vegetables</div>
-        </div>
+      </div>
       <div class="cat-chip" data-cat="Fruits" onclick="filterCat('Fruits', this)">
-        <div class="cat-icon" style="background:#fffde7;">🫙</div>
+        <div class="cat-icon" style="background:#fff3e0; font-size:28px;">🍎</div>
         <div class="cat-label">Fruits</div>
-    </div>
+      </div>
     </div>
 
     <div class="section-title" id="section-label">🥜 सभी Products</div>
@@ -668,7 +664,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
         </div>
       </div>
 
-      <!-- Photo Upload Section -->
       <div class="form-group" style="margin-bottom:10px;">
         <label>Product Photo *</label>
         <div class="photo-tabs">
@@ -764,10 +759,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 </div>
 
 <script>
+// =====================================================
+// CONFIGURATION
+// =====================================================
 const SHOP_WA = "919260903360";
+// Google Sheet Web App URL - yahan price bhi jayega lekin WA message mein nahi dikhega
 const ADMIN_SHEET_URL = "https://script.google.com/macros/s/AKfycbws9ViuP48sDziUCXWaxfqJb2usrOld83PKUsBvA7p2NBt8xO7yunBwPY9ptfGp0vOFTA/exec";
 
-let cart = {}; 
+let cart = {};
 let currentUser = null;
 let currentCat = 'all';
 let searchQ = '';
@@ -775,18 +774,21 @@ let searchQ = '';
 const products = [
   {id:1, name:'Premium Kaju', price:200, mrp:350, unit:'250g', cat:'dry', badge:'best', img:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80', rating:4.8, reviews:128},
   {id:2, name:'Special Badam', price:300, mrp:400, unit:'250g', cat:'dry', badge:'off', img:'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=400&q=80', rating:4.7, reviews:95},
-  {id:3, name:'Lal Mirch Powder', price:55, mrp:70, unit:'200g', cat:'masala', badge:'off', img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', rating:4.6, reviews:200},
-  {id:4, name:'Shuddh Haldi', price:45, mrp:60, unit:'200g', cat:'masala', badge:'new', img:'https://images.unsplash.com/photo-1615485541147-1131185bb9b9?w=400&q=80', rating:4.9, reviews:310},
+  {id:3, name:'Lal Mirch Powder', price:55, mrp:70, unit:'200g', cat:'Mirch-Masala', badge:'off', img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', rating:4.6, reviews:200},
+  {id:4, name:'Shuddh Haldi', price:45, mrp:60, unit:'200g', cat:'Mirch-Masala', badge:'new', img:'https://images.unsplash.com/photo-1615485541147-1131185bb9b9?w=400&q=80', rating:4.9, reviews:310},
   {id:5, name:'Phool Makhana', price:180, mrp:220, unit:'200g', cat:'dry', badge:'best', img:'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=400&q=80', rating:4.5, reviews:75},
-  {id:6, name:'Sabut Jeera', price:70, mrp:90, unit:'200g', cat:'masala', badge:'off', img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', rating:4.6, reviews:142},
+  {id:6, name:'Sabut Jeera', price:70, mrp:90, unit:'200g', cat:'Mirch-Masala', badge:'off', img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', rating:4.6, reviews:142},
   {id:7, name:'Kishmish', price:120, mrp:150, unit:'250g', cat:'dry', badge:'off', img:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80', rating:4.4, reviews:88},
-  {id:8, name:'Kala Namak', price:30, mrp:40, unit:'200g', cat:'masala', badge:'new', img:'https://images.unsplash.com/photo-1615485541147-1131185bb9b9?w=400&q=80', rating:4.7, reviews:220},
+  {id:8, name:'Kala Namak', price:30, mrp:40, unit:'200g', cat:'Mirch-Masala', badge:'new', img:'https://images.unsplash.com/photo-1615485541147-1131185bb9b9?w=400&q=80', rating:4.7, reviews:220},
   {id:9, name:'Chia Seeds', price:150, mrp:190, unit:'200g', cat:'seeds', badge:'new', img:'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=400&q=80', rating:4.6, reviews:160},
   {id:10, name:'Flax Seeds', price:90, mrp:120, unit:'250g', cat:'seeds', badge:'off', img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', rating:4.5, reviews:95},
   {id:11, name:'Shakkar', price:65, mrp:80, unit:'500g', cat:'sweets', badge:'best', img:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80', rating:4.8, reviews:300},
   {id:12, name:'Pure Ghee', price:550, mrp:650, unit:'500ml', cat:'oil', badge:'best', img:'https://images.unsplash.com/photo-1615485541147-1131185bb9b9?w=400&q=80', rating:4.9, reviews:410},
 ];
 
+// =====================================================
+// LOGIN
+// =====================================================
 function loginMe() {
   const n = document.getElementById('cust-name').value.trim();
   const p = document.getElementById('cust-phone').value.trim();
@@ -813,6 +815,9 @@ function logout() {
   location.reload();
 }
 
+// =====================================================
+// PRODUCTS
+// =====================================================
 function getDiscount(p) { return Math.round((1 - p.price/p.mrp)*100); }
 
 function renderProducts() {
@@ -873,7 +878,7 @@ function filterCat(cat, el) {
   currentCat = cat;
   document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
-  const labels = {all:'🛒 सभी Products', dry:'🥜 Dry Fruits', masala:'🌶️ Masala', seeds:'🌱 Seeds', sweets:'🍬 Sweets', oil:'🫙 Oil & Ghee'};
+  const labels = {all:'🛒 सभी Products', dry:'🥜 Dry Fruits', 'Mirch-Masala':'🌶️ Mirch-Masala', 'Pulses & Rice':'🌾 Pulses & Rice', seeds:'🌱 Seeds', sweets:'🍬 Sweets', oil:'🛢️ Oil & Ghee', Vegetables:'🥦 Vegetables', Fruits:'🍎 Fruits', 'Soap & detergent':'🧴 Soap & Detergent'};
   document.getElementById('section-label').textContent = labels[cat] || 'Products';
   renderProducts();
 }
@@ -890,6 +895,9 @@ function clearSearch() {
   renderProducts();
 }
 
+// =====================================================
+// CART
+// =====================================================
 function openCart() {
   const total = Object.values(cart).reduce((a,b)=>a+b,0);
   if(!total) { showToast('Cart khali hai!'); return; }
@@ -938,7 +946,7 @@ function renderCartDrawer() {
   document.getElementById('bill-item-total').textContent = '₹' + itemTotal;
   document.getElementById('bill-delivery').textContent = delivery === 0 ? '🟢 Free' : '₹' + delivery;
   document.getElementById('bill-total').textContent = '₹' + grandTotal;
-  
+
   if(saving > 0) {
     document.getElementById('bill-saving').textContent = '₹' + saving;
     document.getElementById('bill-saving-row').style.display = 'flex';
@@ -947,94 +955,104 @@ function renderCartDrawer() {
   }
 }
 
+// =====================================================
+// WHATSAPP ORDER - Price WA message mein NAHI, Sheet mein HAAN
+// =====================================================
 function sendWA() {
   const addr = document.getElementById('addr').value.trim();
   if(!addr) { showToast('Address likhna zaroori hai!'); return; }
 
   let itemTotal = 0;
-  // WhatsApp Message ka header
-  let waMsg = `*🛒 JAIN STORE LALITPUR*\n`;
-  waMsg += `👤 *Naam:* ${currentUser.n}\n`;
-  waMsg += `📞 *Phone:* ${currentUser.p}\n`;
-  waMsg += `🏠 *Address:* ${addr}\n\n`;
-  waMsg += `*Ordered Items:*\n`;
+  const orderedItems = [];
 
-Object.keys(cart).forEach(id => {
+  // Items collect karo with price (sheet ke liye)
+  Object.keys(cart).forEach(id => {
     if(!cart[id]) return;
     const p = products.find(x => x.id == id);
     const qty = cart[id];
     const subtotal = p.price * qty;
     itemTotal += subtotal;
-    // Niche wali line check karein, aise hi honi chahiye:
-    waMsg += `✅ *${p.name}* (${p.unit}) x ${qty} = ₹${subtotal}\n`;
+    orderedItems.push({ name: p.name, unit: p.unit, qty, price: p.price, subtotal });
   });
 
   if(itemTotal < 500) { showToast('Minimum order ₹500 hona chahiye'); return; }
 
   let delivery = itemTotal >= 500 ? 0 : 30;
   const grandTotal = itemTotal + delivery;
-  
-  waMsg += `\n💰 *Total Bill: ₹${grandTotal}*`;
-  if(delivery === 0) waMsg += `\n🟢 *Free Delivery*`;
 
-  // History mein save karne ke liye
-const orderData = {
+  // ✅ WHATSAPP MESSAGE - Price nahi hai
+  let waMsg = `*🛒 JAIN STORE LALITPUR*\n`;
+  waMsg += `👤 *Naam:* ${currentUser.n}\n`;
+  waMsg += `📞 *Phone:* ${currentUser.p}\n`;
+  waMsg += `🏠 *Address:* ${addr}\n\n`;
+  waMsg += `*📦 Ordered Items:*\n`;
+  orderedItems.forEach(item => {
+    waMsg += `✅ *${item.name}* (${item.unit}) × ${item.qty}\n`;
+  });
+  waMsg += `\n⏰ ${new Date().toLocaleString('hi-IN')}`;
+
+  // ✅ GOOGLE SHEET - Price ke saath (Excel mein dikhega)
+  const sheetItems = orderedItems.map(i => `${i.name}(${i.unit})x${i.qty}=Rs${i.subtotal}`).join(' | ');
+  const sheetUrl = `${ADMIN_SHEET_URL}?act=Order&n=${encodeURIComponent(currentUser.n)}&p=${encodeURIComponent(currentUser.p)}&addr=${encodeURIComponent(addr)}&items=${encodeURIComponent(sheetItems)}&total=${grandTotal}&delivery=${delivery}&date=${encodeURIComponent(new Date().toLocaleString())}`;
+  fetch(sheetUrl, { mode:'no-cors' }).catch(()=>{});
+
+  // ✅ LOCAL STORAGE mein save (Orders page ke liye)
+  const orderData = {
     id: 'ORD' + Date.now(),
     date: new Date().toLocaleString(),
-    items: Object.keys(cart).filter(id => cart[id] > 0).map(id => {
-        const p = products.find(x => x.id == id);
-        return `${p.name} (${p.unit}) x ${cart[id]}`;
-    }).join(', '),
-    total: itemTotal,
-    phone: currentUser ? currentUser.p : JSON.parse(localStorage.getItem('jainUser') || '{}').p, // Phone number yahan se aayega
-    addr: document.getElementById('addr').value
-};
+    items: orderedItems.map(i => `${i.name} (${i.unit}) x ${i.qty}`).join(', '),
+    itemsWithPrice: orderedItems,
+    total: grandTotal,
+    itemTotal: itemTotal,
+    delivery: delivery,
+    phone: currentUser.p,
+    addr: addr
+  };
 
-// LocalStorage mein save karein
-const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
-orders.push(orderData);
-localStorage.setItem('jainOrders', JSON.stringify(orders));
+  const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
+  orders.push(orderData);
+  localStorage.setItem('jainOrders', JSON.stringify(orders));
 
-  // WhatsApp open karein
+  // WhatsApp open karo
   window.open(`https://wa.me/${SHOP_WA}?text=${encodeURIComponent(waMsg)}`);
 
-  // Cart clear karein
-  cart = {}; 
+  // Cart clear
+  cart = {};
   updateCartCount(); renderProducts(); closeCart(); loadOrderStats();
   showToast('✅ Order WhatsApp par bhej diya gaya!');
 }
 
+// =====================================================
+// ORDERS
+// =====================================================
 function loadOrders() {
-    const el = document.getElementById('order-list');
-    if(!el) return;
+  const el = document.getElementById('order-list');
+  if(!el) return;
 
-    const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
-    // Login user ka phone nikalne ka sabse pakka tarika
-    const user = currentUser || JSON.parse(localStorage.getItem('jainUser') || '{}');
-    
-    // Filter: Phone number match hona chahiye
-    const mine = orders.filter(o => o.phone === user.p);
+  const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
+  const user = currentUser || JSON.parse(localStorage.getItem('jainUser') || '{}');
+  const mine = orders.filter(o => o.phone === user.p);
 
-    if (mine.length === 0) {
-        el.innerHTML = '<div style="text-align:center; padding:40px; color:#999;">Koi order nahi mila. Naya order karke dekhein.</div>';
-        return;
-    }
+  if(mine.length === 0) {
+    el.innerHTML = '<div style="text-align:center; padding:40px; color:#999; font-weight:700;">Koi order nahi mila.<br>Naya order karke dekhein. 🛒</div>';
+    return;
+  }
 
-    el.innerHTML = mine.map(o => `
-        <div class="order-card" style="background:#fff; border:1px solid #eee; padding:15px; border-radius:12px; margin-bottom:10px;">
-            <div style="display:flex; justify-content:space-between; font-weight:bold;">
-                <span>🆔 ${o.id}</span>
-                <span style="color:var(--g)">₹${o.total}</span>
-            </div>
-            <p style="font-size:12px; color:#666; margin:5px 0;">📅 ${o.date}</p>
-            <p style="font-size:13px;">📦 ${o.items}</p>
-            <button onclick="downloadInvoice('${o.id}')" style="width:100%; background:var(--g); color:white; border:none; padding:8px; border-radius:8px; cursor:pointer; margin-top:10px;">
-                Download Invoice (PDF)
-            </button>
-        </div>
-    `).join('');
+  el.innerHTML = mine.reverse().map(o => `
+    <div class="order-card">
+      <div class="order-header">
+        <span class="order-id">🆔 ${o.id}</span>
+        <span class="order-total">₹${o.total}</span>
+      </div>
+      <p class="order-date">📅 ${o.date}</p>
+      <p class="order-items">📦 ${o.items}</p>
+      <span class="order-status">✅ Placed</span>
+      <button onclick="downloadInvoice('${o.id}')" style="display:block; width:100%; background:var(--g); color:white; border:none; padding:9px; border-radius:9px; cursor:pointer; margin-top:10px; font-weight:800; font-size:13px; font-family:Nunito,sans-serif;">
+        📄 Invoice Download (PDF)
+      </button>
+    </div>
+  `).join('');
 }
-
 
 function loadOrderStats() {
   const orders = JSON.parse(localStorage.getItem('jainOrders')||'[]');
@@ -1061,12 +1079,86 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'), 2500);
 }
 
-// ===== ADMIN PANEL LOGIC =====
-const ADMIN_PASSWORD = "jain@admin123"; // 🔑 Apna password yahan change karein
+// =====================================================
+// PDF INVOICE
+// =====================================================
+function downloadInvoice(orderId) {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
+    const o = orders.find(x => x.id === orderId);
+    if(!o) return alert("Order data nahi mila!");
+
+    const savedUser = JSON.parse(localStorage.getItem('jainUser') || '{}');
+    const userName = savedUser.n || "Customer";
+
+    doc.setFontSize(22);
+    doc.setTextColor(12, 131, 31);
+    doc.text("JAIN STORE - LALITPUR", 14, 20);
+
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Invoice No: ${o.id}`, 14, 30);
+    doc.text(`Date: ${o.date || new Date().toLocaleDateString()}`, 14, 35);
+    doc.text(`Customer: ${userName}`, 14, 40);
+    doc.text(`Phone: ${o.phone || ''}`, 14, 45);
+    doc.text(`Address: ${o.addr || ''}`, 14, 50);
+
+    let tableBody = [];
+    if(o.itemsWithPrice && Array.isArray(o.itemsWithPrice)) {
+      tableBody = o.itemsWithPrice.map(item => [
+        `${item.name} (${item.unit})`,
+        item.qty,
+        `Rs. ${item.price}`,
+        `Rs. ${item.subtotal}`
+      ]);
+    } else {
+      tableBody = [[o.items, '', '', `Rs. ${o.itemTotal || o.total}`]];
+    }
+
+    if(doc.autoTable) {
+      doc.autoTable({
+        startY: 58,
+        head: [['Product', 'Qty', 'Rate', 'Amount']],
+        body: tableBody,
+        theme: 'striped',
+        headStyles: { fillColor: [12, 131, 31] },
+        styles: { fontSize: 10 }
+      });
+      const finalY = doc.lastAutoTable.finalY + 8;
+      if(o.delivery === 0) {
+        doc.setTextColor(12, 131, 31);
+        doc.text(`Delivery: FREE`, 14, finalY);
+      } else {
+        doc.setTextColor(0,0,0);
+        doc.text(`Delivery: Rs. ${o.delivery}`, 14, finalY);
+      }
+      doc.setFontSize(13);
+      doc.setTextColor(0,0,0);
+      doc.text(`Total Amount: Rs. ${o.total}`, 14, finalY + 8);
+      doc.setFontSize(10);
+      doc.setTextColor(100,100,100);
+      doc.text("Thank you for shopping at Jain Store!", 14, finalY + 18);
+    } else {
+      doc.text(`Items: ${o.items}`, 14, 65);
+      doc.text(`Total: Rs. ${o.total}`, 14, 75);
+    }
+
+    doc.save(`Invoice_${o.id}.pdf`);
+  } catch(err) {
+    console.error("PDF Error:", err);
+    alert("PDF banane mein problem aayi.");
+  }
+}
+
+// =====================================================
+// ADMIN PANEL
+// =====================================================
+const ADMIN_PASSWORD = "jain@admin123";
 let csvParsedProducts = [];
 let currentPhotoTab = 'upload';
 let uploadedImgBase64 = '';
-let editingProductId = null;
 
 function openAdminLogin() {
   document.getElementById('admin-login-screen').classList.add('open');
@@ -1101,7 +1193,6 @@ function switchAdminTab(tab) {
   if(tab === 'list') renderAdminList();
 }
 
-// Photo Tab
 function switchPhotoTab(tab) {
   currentPhotoTab = tab;
   document.getElementById('photo-section-upload').style.display = tab==='upload' ? 'block' : 'none';
@@ -1128,8 +1219,6 @@ function previewUrlImage(url) {
   if(url) { img.src = url; img.style.display = 'block'; }
   else { img.style.display = 'none'; }
 }
-
-// Get final image src
 function getFinalImgSrc() {
   if(currentPhotoTab === 'upload' && uploadedImgBase64) return uploadedImgBase64;
   if(currentPhotoTab === 'url') {
@@ -1139,20 +1228,17 @@ function getFinalImgSrc() {
   return 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80';
 }
 
-// Load products from localStorage (merge with default)
 function getAllProducts() {
   const stored = JSON.parse(localStorage.getItem('jainProducts') || 'null');
-  return stored || products;
+  return stored || [...products];
 }
 function saveAllProducts(arr) {
   localStorage.setItem('jainProducts', JSON.stringify(arr));
-  // Refresh main products array
   products.length = 0;
   arr.forEach(p => products.push(p));
   renderProducts();
 }
 
-// Save / Update product
 function saveProduct() {
   const name = document.getElementById('af-name').value.trim();
   const price = parseFloat(document.getElementById('af-price').value);
@@ -1169,7 +1255,6 @@ function saveProduct() {
 
   const allProds = getAllProducts();
   if(editId) {
-    // Update existing
     const idx = allProds.findIndex(p => p.id == editId);
     if(idx !== -1) {
       allProds[idx] = { ...allProds[idx], name, price, mrp, unit, cat, badge, rating, reviews, img };
@@ -1202,7 +1287,6 @@ function resetProductForm() {
   document.getElementById('save-prod-btn').textContent = '💾 Product Save Karein';
 }
 
-// Edit product
 function editProduct(id) {
   const p = getAllProducts().find(x => x.id == id);
   if(!p) return;
@@ -1217,7 +1301,6 @@ function editProduct(id) {
   document.getElementById('af-reviews').value = p.reviews;
   document.getElementById('af-edit-id').value = p.id;
   document.getElementById('save-prod-btn').textContent = '✏️ Product Update Karein';
-  // Show image
   if(p.img && p.img.startsWith('data:')) {
     switchPhotoTab('upload');
     uploadedImgBase64 = p.img;
@@ -1231,7 +1314,6 @@ function editProduct(id) {
   }
 }
 
-// Delete product
 function deleteProduct(id) {
   if(!confirm('Kya aap is product ko delete karna chahte hain?')) return;
   const allProds = getAllProducts().filter(p => p.id != id);
@@ -1240,7 +1322,6 @@ function deleteProduct(id) {
   showToast('🗑️ Product delete ho gaya!');
 }
 
-// Render admin product list
 function renderAdminList() {
   const q = (document.getElementById('admin-search')?.value || '').toLowerCase();
   const cat = document.getElementById('admin-cat-filter')?.value || 'all';
@@ -1270,7 +1351,9 @@ function renderAdminList() {
   `).join('');
 }
 
-// ===== CSV BULK UPLOAD =====
+// =====================================================
+// CSV BULK UPLOAD
+// =====================================================
 function downloadSampleCSV() {
   const header = 'name,price,mrp,unit,cat,badge,img_url,rating,reviews';
   const rows = [
@@ -1291,10 +1374,7 @@ function handleCSVUpload(inp) {
   const file = inp.files[0];
   if(!file) return;
   const reader = new FileReader();
-  reader.onload = e => {
-    const text = e.target.result;
-    parseCSV(text);
-  };
+  reader.onload = e => parseCSV(e.target.result);
   reader.readAsText(file);
 }
 
@@ -1321,7 +1401,6 @@ function parseCSV(text) {
   bodyEl.innerHTML = '';
 
   for(let i = 1; i < lines.length; i++) {
-    // Handle commas inside quotes
     const cols = lines[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || lines[i].split(',');
     const clean = cols.map(c => c.replace(/^"|"$/g,'').trim());
     const name = clean[nameIdx] || '';
@@ -1347,7 +1426,7 @@ function parseCSV(text) {
     </tr>`;
   }
 
-  if(csvParsedProducts.length === 0) { showToast('❌ Koi valid product nahi mila'); return; }
+  if(!csvParsedProducts.length) { showToast('❌ Koi valid product nahi mila'); return; }
   document.getElementById('csv-count-msg').textContent = `${csvParsedProducts.length} products ready to import`;
   document.getElementById('csv-preview-section').style.display = 'block';
 }
@@ -1364,19 +1443,23 @@ function importCSVProducts() {
   switchAdminTab('list');
 }
 
-// On app load, merge saved products
+// =====================================================
+// APP INIT
+// =====================================================
 window.addEventListener('load', () => {
+  // Saved products load karo
   const stored = localStorage.getItem('jainProducts');
   if(stored) {
     const arr = JSON.parse(stored);
     products.length = 0;
     arr.forEach(p => products.push(p));
   }
-});
-</script>
+
+  // Auto login check
   const saved = localStorage.getItem('jainUser');
   if(saved) initApp(JSON.parse(saved));
 
+  // Banner auto-slide
   let idx = 0;
   setInterval(()=>{
     const track = document.getElementById('slider-track');
@@ -1385,65 +1468,7 @@ window.addEventListener('load', () => {
     idx = (idx+1) % 2;
     track.scrollTo({left: idx * (w+12), behavior:'smooth'});
   }, 4000);
-};
-
-function downloadInvoice(orderId) {
-  try {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
-    const o = orders.find(x => x.id === orderId);
-    
-    if(!o) return alert("Order data nahi mila!");
-
-    // User data nikalne ka safer tareeka
-    const savedUser = JSON.parse(localStorage.getItem('jainUser') || '{}');
-    const userName = savedUser.n || "Customer";
-
-    // Header
-    doc.setFontSize(22);
-    doc.setTextColor(12, 131, 31); 
-    doc.text("JAIN STORE LALITPUR", 14, 20);
-    
-    doc.setFontSize(10);
-    doc.setTextColor(0, 0, 0);
-    doc.text(`Invoice No: ${o.id}`, 14, 30);
-    doc.text(`Date: ${o.date || new Date().toLocaleDateString()}`, 14, 35);
-    doc.text(`Customer: ${userName}`, 14, 40);
-    doc.text(`Address: ${o.addr || 'Lalitpur'}`, 14, 45);
-
-    // Table Logic: Har item ke liye alag row banana
-    if (doc.autoTable) {
-      // Agar o.items string hai toh use array jaisa dikhayein, 
-      // agar pehle se array hai toh use map karein
-      const tableBody = Array.isArray(o.items) 
-        ? o.items.map(item => [item.name || item, `Rs. ${item.price || o.total}`])
-        : [[o.items, `Rs. ${o.total}`]];
-
-      doc.autoTable({
-        startY: 55,
-        head: [['Description', 'Amount']],
-        body: tableBody,
-        theme: 'striped',
-        headStyles: { fillColor: [12, 131, 31] },
-        styles: { fontSize: 10 }
-      });
-    } else {
-      doc.text(`Items: ${JSON.stringify(o.items)}`, 14, 60);
-      doc.text(`Total: Rs. ${o.total}`, 14, 70);
-    }
-
-    const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : 80;
-    doc.setFontSize(12);
-    doc.text("Thank you for your order!", 14, finalY + 15);
-    
-    doc.save(`Invoice_${o.id}.pdf`);
-  } catch (err) {
-    console.error("PDF Error:", err);
-    alert("PDF banane mein problem aayi. Console check karein.");
-  }
-}
+});
 </script>
 </body>
 </html>
