@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jain Store – Nazai Bazar,Lalitpur</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://script.google.com/macros/s/AKfycbwqnBO9y4sx7JrFoUpjW9epWvt6jFfWwGszDEyQA9ipbkWu62gaFyWh2YzxJrGrcu8/exec"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -426,14 +426,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
       <div class="profile-opt" onclick="showPage('orders'); loadOrders();">
         <span class="opt-icon">📦</span> My Orders <span class="opt-arrow">›</span>
       </div>
-      <div class="profile-opt">
-        <span class="opt-icon">📍</span> Saved Addresses <span class="opt-arrow">›</span>
+      <div class="profile-opt" onclick="openSavedAddress()">
+        <span class="opt-icon">📍</span> Saved Address <span class="opt-arrow">›</span>
       </div>
-      <div class="profile-opt">
-        <span class="opt-icon">💳</span> Payment Methods <span class="opt-arrow">›</span>
-      </div>
-      <div class="profile-opt">
-        <span class="opt-icon">💬</span> Help & Support <span class="opt-arrow">›</span>
+      <div class="profile-opt" onclick="openHelpSupport()">
+        <span class="opt-icon">💬</span> Help &amp; Support <span class="opt-arrow">›</span>
       </div>
       <div class="profile-opt danger" onclick="logout()">
         <span class="opt-icon">🚪</span> Logout
@@ -488,28 +485,17 @@ const SHOP_WA = "919260903360";
 // ⬇️ YAHAN APNE GOOGLE APPS SCRIPT WEB APP URLs DAALO
 // Sheet 1 = Inventory (Products)
 // Sheet 2 = Orders
-const INVENTORY_SHEET_URL = localStorage.getItem('invSheetUrl') || '';
-const ORDERS_SHEET_URL    = localStorage.getItem('ordSheetUrl') || '';
+// ✅ Sheet URLs directly set hain — localStorage override bhi kaam karega
+const INVENTORY_SHEET_URL = localStorage.getItem('invSheetUrl') || 'https://script.google.com/macros/s/AKfycbyaY9xRG9jWsg611QHQWtTlCnssWPy865E85UGriBJ8ExYqfWmNPBbK76FH-t4kyTGl-g/exec';
+const ORDERS_SHEET_URL    = localStorage.getItem('ordSheetUrl') || 'https://script.google.com/macros/s/AKfycbzIo5C1QbEj1K0jywG3ln7b9ccuSTjitQjEiuwl7ITbgMb7aEsuy7xhK5aloAL8eukbXA/exec';
 
 let cart = {};
 let currentUser = null;
 let currentCat = 'all';
 let searchQ = '';
 
-const products = [
-  {id:1, name:'Premium Kaju', price:200, mrp:350, unit:'250g', cat:'dry', badge:'best', img:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80', rating:4.8, reviews:128},
-  {id:2, name:'Special Badam', price:300, mrp:400, unit:'250g', cat:'dry', badge:'off', img:'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=400&q=80', rating:4.7, reviews:95},
-  {id:3, name:'Lal Mirch Powder', price:55, mrp:70, unit:'200g', cat:'Mirch-Masala', badge:'off', img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', rating:4.6, reviews:200},
-  {id:4, name:'Shuddh Haldi', price:45, mrp:60, unit:'200g', cat:'Mirch-Masala', badge:'new', img:'https://images.unsplash.com/photo-1615485541147-1131185bb9b9?w=400&q=80', rating:4.9, reviews:310},
-  {id:5, name:'Phool Makhana', price:180, mrp:220, unit:'200g', cat:'dry', badge:'best', img:'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=400&q=80', rating:4.5, reviews:75},
-  {id:6, name:'Sabut Jeera', price:70, mrp:90, unit:'200g', cat:'Mirch-Masala', badge:'off', img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', rating:4.6, reviews:142},
-  {id:7, name:'Kishmish', price:120, mrp:150, unit:'250g', cat:'dry', badge:'off', img:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80', rating:4.4, reviews:88},
-  {id:8, name:'Kala Namak', price:30, mrp:40, unit:'200g', cat:'Mirch-Masala', badge:'new', img:'https://images.unsplash.com/photo-1615485541147-1131185bb9b9?w=400&q=80', rating:4.7, reviews:220},
-  {id:9, name:'Chia Seeds', price:150, mrp:190, unit:'200g', cat:'seeds', badge:'new', img:'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=400&q=80', rating:4.6, reviews:160},
-  {id:10, name:'Flax Seeds', price:90, mrp:120, unit:'250g', cat:'seeds', badge:'off', img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', rating:4.5, reviews:95},
-  {id:11, name:'Shakkar', price:65, mrp:80, unit:'500g', cat:'sweets', badge:'best', img:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80', rating:4.8, reviews:300},
-  {id:12, name:'Pure Ghee', price:550, mrp:650, unit:'500ml', cat:'oil', badge:'best', img:'https://images.unsplash.com/photo-1615485541147-1131185bb9b9?w=400&q=80', rating:4.9, reviews:410},
-];
+const products = [];
+// ✅ Saare products Google Sheet se aate hain — yahan kuch nahi rakha
 
 // =====================================================
 // OTP VERIFICATION SYSTEM
@@ -519,31 +505,46 @@ let otpPhone = '';
 let otpName = '';
 let otpTimerInterval = null;
 
+function showLoginToast(msg) {
+  // Login screen par toast (app toast abhi available nahi)
+  let lt = document.getElementById('login-toast');
+  if(!lt) {
+    lt = document.createElement('div');
+    lt.id = 'login-toast';
+    lt.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 20px;border-radius:50px;font-size:13px;font-weight:700;z-index:99999;white-space:nowrap;transition:opacity .3s;font-family:Nunito,sans-serif;';
+    document.body.appendChild(lt);
+  }
+  lt.textContent = msg;
+  lt.style.opacity = '1';
+  setTimeout(() => lt.style.opacity = '0', 2500);
+}
+
 function sendOTP() {
   const n = document.getElementById('cust-name').value.trim();
   const p = document.getElementById('cust-phone').value.trim();
-  if(!n) { showToast('❌ Naam likhna zaroori hai!'); return; }
-  if(p.length !== 10 || !/^\d{10}$/.test(p)) { showToast('❌ Sahi 10 digit number likhein!'); return; }
+  if(!n) { showLoginToast('❌ Naam likhna zaroori hai!'); return; }
+  if(p.length !== 10 || !/^\d{10}$/.test(p)) { showLoginToast('❌ Sahi 10 digit number likhein!'); return; }
 
   otpName = n; otpPhone = p;
-  // Generate 4-digit OTP
   generatedOTP = String(Math.floor(1000 + Math.random() * 9000));
 
   const btn = document.getElementById('send-otp-btn');
   btn.textContent = '⏳ OTP bhej rahe hain...';
   btn.disabled = true;
 
-  // Send OTP via WhatsApp (opens wa.me link)
-  const otpMsg = `*Jain Store - OTP Verification*\n\nAapka OTP: *${generatedOTP}*\n\nYeh OTP 5 minute ke liye valid hai.\n\n-Jain Store, Lalitpur`;
+  // ✅ Customer ke WhatsApp par OTP bhejo (pre-filled message)
+  const customerMsg = `*Jain Store - OTP Verification*\n\n📲 Aapka OTP: *${generatedOTP}*\n\nYeh OTP 5 minute ke liye valid hai.\n\n✅ Jain Store, Nazai Bazar, Lalitpur`;
+
   setTimeout(() => {
-    window.open(`https://wa.me/91${p}?text=${encodeURIComponent(otpMsg)}`);
-    document.getElementById('otp-sent-msg').textContent = `📲 OTP ${p} par WhatsApp se bheja gaya`;
+    // Customer ke number par directly WhatsApp kholo with OTP message
+    window.open(`https://wa.me/91${p}?text=${encodeURIComponent(customerMsg)}`);
+    document.getElementById('otp-sent-msg').innerHTML = `📲 <b>${p}</b> ke WhatsApp par OTP bheja gaya`;
     document.getElementById('step-details').style.display = 'none';
     document.getElementById('step-otp').style.display = 'flex';
     document.getElementById('otp-d1').focus();
     btn.textContent = '📲 OTP भेजें';
     btn.disabled = false;
-    startOtpTimer(300); // 5 minute
+    startOtpTimer(300);
   }, 600);
 }
 
@@ -569,9 +570,9 @@ function resendOTP() {
   document.getElementById('otp-d1').value=''; document.getElementById('otp-d2').value='';
   document.getElementById('otp-d3').value=''; document.getElementById('otp-d4').value='';
   generatedOTP = String(Math.floor(1000 + Math.random() * 9000));
-  const otpMsg = `*Jain Store - OTP*\n\nAapka naya OTP: *${generatedOTP}*\n\n-Jain Store, Lalitpur`;
+  const otpMsg = `*Jain Store - OTP*\n\nAapka naya OTP: *${generatedOTP}*\n\nYeh OTP 5 minute ke liye valid hai.\n\n✅ Jain Store, Nazai Bazar, Lalitpur`;
   window.open(`https://wa.me/91${otpPhone}?text=${encodeURIComponent(otpMsg)}`);
-  showToast('📲 Naya OTP bheja gaya!');
+  showLoginToast('📲 Naya OTP bheja gaya!');
   startOtpTimer(300);
   document.getElementById('otp-d1').focus();
 }
@@ -623,6 +624,9 @@ function initApp(u) {
   document.getElementById('uname-chip').textContent = u.n.split(' ')[0];
   document.getElementById('p-name').textContent = u.n;
   document.getElementById('p-phone').textContent = '📞 ' + u.p;
+  // ✅ Saved sheet URLs set karo (hardcoded URLs use honge automatically)
+  if(!localStorage.getItem('invSheetUrl')) localStorage.setItem('invSheetUrl', 'https://script.google.com/macros/s/AKfycbyaY9xRG9jWsg611QHQWtTlCnssWPy865E85UGriBJ8ExYqfWmNPBbK76FH-t4kyTGl-g/exec');
+  if(!localStorage.getItem('ordSheetUrl')) localStorage.setItem('ordSheetUrl', 'https://script.google.com/macros/s/AKfycbzIo5C1QbEj1K0jywG3ln7b9ccuSTjitQjEiuwl7ITbgMb7aEsuy7xhK5aloAL8eukbXA/exec');
   renderProducts();
   loadOrderStats();
 }
@@ -719,6 +723,12 @@ function openCart() {
   const total = Object.values(cart).reduce((a,b)=>a+b,0);
   if(!total) { showToast('Cart khali hai!'); return; }
   renderCartDrawer();
+  // ✅ Saved address auto-fill
+  const savedAddr = localStorage.getItem('jainAddr_' + (currentUser?.p || ''));
+  if(savedAddr) {
+    const addrEl = document.getElementById('addr');
+    if(addrEl && !addrEl.value) addrEl.value = savedAddr;
+  }
   document.getElementById('cart-drawer').classList.add('open');
   document.getElementById('drawer-overlay').classList.add('open');
 }
@@ -778,6 +788,9 @@ function renderCartDrawer() {
 function sendWA() {
   const addr = document.getElementById('addr').value.trim();
   if(!addr) { showToast('Address likhna zaroori hai!'); return; }
+
+  // ✅ Address save karo next time ke liye
+  localStorage.setItem('jainAddr_' + currentUser.p, addr);
 
   let itemTotal = 0;
   const orderedItems = [];
@@ -882,6 +895,27 @@ function loadOrderStats() {
   document.getElementById('stat-spent').textContent = '₹'+spent;
 }
 
+// =====================================================
+// SAVED ADDRESS & HELP
+// =====================================================
+function openSavedAddress() {
+  const addr = localStorage.getItem('jainAddr_' + (currentUser?.p || '')) || '';
+  const newAddr = prompt('📍 Aapka Delivery Address:', addr);
+  if(newAddr !== null) {
+    localStorage.setItem('jainAddr_' + currentUser.p, newAddr.trim());
+    showToast('✅ Address save ho gaya!');
+  }
+}
+
+function openHelpSupport() {
+  const msg = `*Jain Store - Help & Support*\n\nNamaste! Mujhe kuch madad chahiye.\n\n👤 Naam: ${currentUser?.n || ''}\n📞 Phone: ${currentUser?.p || ''}`;
+  const wa = window.open(`https://wa.me/919260903360?text=${encodeURIComponent(msg)}`);
+  if(!wa) {
+    // fallback: show contact info
+    alert('📞 Call/WhatsApp:\n9260903360\n\n📧 Email:\njainaviral05483@gmail.com');
+  }
+}
+
 function showPage(pg) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
@@ -978,27 +1012,47 @@ function downloadInvoice(orderId) {
 // =====================================================
 
 // Sheet 1 (Inventory) se products load karo
+// ✅ Sheet ki cat value ko code wali value mein convert karo
+function normalizeCat(cat) {
+  if(!cat) return 'dry';
+  const c = cat.toString().toLowerCase().trim();
+  if(c.includes('dry') || c.includes('fruit') || c.includes('kaju') || c.includes('badam') || c.includes('makhana') || c.includes('kishmish')) return 'dry';
+  if(c.includes('mirch') || c.includes('masala') || c.includes('spice') || c.includes('masale') || c.includes('jeera') || c.includes('haldi') || c.includes('dhaniya') || c.includes('namak')) return 'Mirch-Masala';
+  if(c.includes('pulse') || c.includes('dal') || c.includes('rice') || c.includes('chawal') || c.includes('chana') || c.includes('masoor') || c.includes('tur') || c.includes('urad')) return 'Pulses & Rice';
+  if(c.includes('seed') || c.includes('beej') || c.includes('chia') || c.includes('flax') || c.includes('sunflower')) return 'seeds';
+  if(c.includes('sweet') || c.includes('mithai') || c.includes('gud') || c.includes('shakkar') || c.includes('sugar') || c.includes('chini')) return 'sweets';
+  if(c.includes('oil') || c.includes('ghee') || c.includes('tel') || c.includes('butter')) return 'oil';
+  if(c.includes('veg') || c.includes('sabzi') || c.includes('aalu') || c.includes('onion') || c.includes('pyaz') || c.includes('tamatar') || c.includes('tomato')) return 'Vegetables';
+  if(c.includes('fruit') || c.includes('fal') || c.includes('apple') || c.includes('banana') || c.includes('kela') || c.includes('seb') || c.includes('mango') || c.includes('aam')) return 'Fruits';
+  if(c.includes('soap') || c.includes('detergent') || c.includes('sabun') || c.includes('wash') || c.includes('clean')) return 'Soap & detergent';
+  return cat; // as-is agar match nahi hua
+}
+
 async function loadProductsFromInventorySheet() {
-  const url = localStorage.getItem('invSheetUrl');
+  const url = localStorage.getItem('invSheetUrl') || INVENTORY_SHEET_URL;
   if(!url) return;
   try {
-    const res = await fetch(`${url}?act=getProducts`);
+    const res = await fetch(url + '?act=getProducts');
     const data = await res.json();
     if(data && Array.isArray(data.products) && data.products.length) {
-      const stored = JSON.parse(localStorage.getItem('jainProducts') || '[]');
-      // Merge: sheet products override stored ones by id
-      const merged = [...defaultProducts];
-      data.products.forEach(sp => {
-        const idx = merged.findIndex(p => p.id == sp.id);
-        if(idx !== -1) merged[idx] = {...merged[idx], ...sp};
-        else merged.push(sp);
-      });
-      localStorage.setItem('jainProducts', JSON.stringify(merged));
+      // ✅ Cat normalize karo — sheet mein kuch bhi likha ho
+      const normalized = data.products.map(p => ({
+        ...p,
+        cat: normalizeCat(p.cat),
+        price: Number(p.price) || 0,
+        mrp: Number(p.mrp) || 0,
+        rating: Number(p.rating) || 4.5,
+        reviews: Number(p.reviews) || 0,
+        img: p.img || 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80'
+      }));
+      localStorage.setItem('jainProducts', JSON.stringify(normalized));
       products.length = 0;
-      merged.forEach(p => products.push(p));
+      normalized.forEach(p => products.push(p));
       renderProducts();
     }
-  } catch(e) {}
+  } catch(e) {
+    console.log('Sheet load error:', e);
+  }
 }
 
 function getAllProducts() {
@@ -1016,19 +1070,14 @@ function saveAllProducts(arr) {
 // APP INIT
 // =====================================================
 window.addEventListener('load', () => {
-  // Saved products load karo
-  const stored = localStorage.getItem('jainProducts');
-  if(stored) {
-    const arr = JSON.parse(stored);
-    products.length = 0;
-    arr.forEach(p => products.push(p));
-  }
+  // ✅ Purana cached product data clear karo taaki Sheet ka fresh data aaye
+  localStorage.removeItem('jainProducts');
 
   // Auto login check
   const saved = localStorage.getItem('jainUser');
   if(saved) initApp(JSON.parse(saved));
 
-  // Sheet 1 se inventory sync karo
+  // ✅ Sheet se hamesha fresh products load karo
   loadProductsFromInventorySheet();
 
   // Banner auto-slide
@@ -1136,4 +1185,3 @@ SETUP STEPS (Dono sheets ke liye alag-alag karein):
 </script>
 </body>
 </html>
-
