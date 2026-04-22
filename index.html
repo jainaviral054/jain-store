@@ -1,1 +1,1139 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jain Store – Nazai Bazar,Lalitpur</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g: #0c831f;
+  --g2: #107826;
+  --y: #f8c200;
+  --y2: #ffd000;
+  --r: #8B1A1A;
+  --bg: #f2f2f2;
+  --white: #fff;
+  --card: #fff;
+  --text: #1a1a1a;
+  --muted: #666;
+  --border: #e8e8e8;
+  --tag: #f0faf0;
+  --radius: 12px;
+  font-family: 'Nunito', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; min-height: 100vh; }
+
+#login-screen {
+  position: fixed; inset: 0; background: var(--white); z-index: 9999;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.login-hero {
+  background: linear-gradient(160deg, #0c831f 60%, #f8c200 100%);
+  padding: 48px 30px 36px; text-align: center; position: relative; overflow: hidden;
+}
+.login-hero::before {
+  content: ''; position: absolute; bottom: -30px; left: -10px; right: -10px;
+  height: 60px; background: var(--white); border-radius: 50% 50% 0 0;
+}
+.login-logo { font-size: 42px; font-weight: 900; color: #fff; letter-spacing: -1px; }
+.login-logo span { color: var(--y); }
+.login-tagline { color: rgba(255,255,255,0.85); font-size: 13px; margin-top: 4px; font-weight: 600; }
+.login-form-wrap { flex: 1; padding: 40px 24px 20px; display: flex; flex-direction: column; gap: 14px; }
+.inp { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: var(--radius); font-size: 15px; font-family: 'Nunito', sans-serif; font-weight: 600; outline: none; transition: .2s; }
+.inp:focus { border-color: var(--g); }
+.login-btn { background: var(--g); color: #fff; border: none; border-radius: var(--radius); padding: 15px; font-size: 16px; font-weight: 800; cursor: pointer; margin-top: 4px; transition: .2s; }
+.login-btn:hover { background: var(--g2); }
+.login-note { text-align: center; font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+#app { display: none; min-height: 100vh; padding-bottom: 72px; }
+
+.topbar {
+  background: var(--g); padding: 10px 16px; position: sticky; top: 0; z-index: 500;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.topbar-row1 { display: flex; align-items: center; justify-content: space-between; }
+.topbar-brand { color: #fff; font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
+.topbar-brand span { color: var(--y); }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.user-chip {
+  background: rgba(255,255,255,0.18); color: #fff; padding: 5px 12px;
+  border-radius: 50px; font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.cart-btn {
+  background: var(--y); color: #111; border: none; padding: 8px 16px;
+  border-radius: 50px; font-size: 13px; font-weight: 900; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; position: relative; white-space: nowrap;
+}
+.cart-btn .cbadge {
+  background: var(--r); color: #fff; border-radius: 50%; width: 20px; height: 20px;
+  font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center;
+}
+
+.search-bar-wrap { background: var(--g); padding: 0 16px 12px; }
+.search-bar {
+  background: #fff; border-radius: 10px; display: flex; align-items: center;
+  padding: 0 14px; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.search-bar input {
+  border: none; outline: none; font-size: 14px; font-weight: 600; padding: 12px 0;
+  flex: 1; font-family: 'Nunito', sans-serif; color: var(--text);
+}
+.search-bar .s-icon { font-size: 18px; color: var(--muted); }
+.search-bar input::placeholder { color: #aaa; font-weight: 600; }
+
+.slider-wrap { padding: 14px 16px 4px; overflow: hidden; }
+.slider-track { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.slider-track::-webkit-scrollbar { display: none; }
+.banner-card {
+  min-width: calc(100% - 32px); scroll-snap-align: start; border-radius: 16px;
+  overflow: hidden; position: relative; height: 140px; flex-shrink: 0;
+}
+.banner-card .b-bg { width: 100%; height: 100%; object-fit: cover; }
+.banner-overlay {
+  position: absolute; inset: 0; padding: 18px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, transparent 70%);
+}
+.banner-title { color: #fff; font-size: 20px; font-weight: 900; line-height: 1.1; }
+.banner-sub { color: rgba(255,255,255,0.85); font-size: 12px; font-weight: 700; margin-top: 3px; }
+.banner-cta {
+  background: var(--y); color: #111; padding: 6px 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 800; display: inline-block; margin-top: 8px; width: fit-content;
+}
+
+.section-title { font-size: 18px; font-weight: 900; padding: 16px 16px 8px; }
+.cats-track { display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 12px; scrollbar-width: none; }
+.cats-track::-webkit-scrollbar { display: none; }
+.cat-chip {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  min-width: 70px; cursor: pointer; flex-shrink: 0;
+}
+.cat-icon {
+  width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center;
+  justify-content: center; font-size: 26px; transition: .2s; border: 2px solid transparent;
+}
+.cat-chip.active .cat-icon { border-color: var(--g); box-shadow: 0 0 0 3px rgba(12,131,31,0.15); }
+.cat-label { font-size: 11px; font-weight: 800; color: var(--text); text-align: center; }
+
+.prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 4px 16px 16px; }
+.prod-card {
+  background: var(--card); border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--border); transition: box-shadow .2s; position: relative;
+}
+.prod-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+.badge-row { position: absolute; top: 8px; left: 8px; display: flex; gap: 4px; z-index: 1; }
+.badge { font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 6px; }
+.badge-off { background: #2d9b40; color: #fff; }
+.badge-best { background: var(--y); color: #111; }
+.badge-new { background: #ff6b6b; color: #fff; }
+
+.prod-img-wrap { height: 115px; background: #fafafa; display: flex; align-items: center; justify-content: center; padding: 8px; }
+.prod-img-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+
+.prod-body { padding: 10px; }
+.prod-name { font-size: 13px; font-weight: 800; line-height: 1.3; min-height: 34px; }
+.prod-unit { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+.prod-rating { display: flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; color: #666; margin-top: 3px; }
+.prod-rating .star { color: var(--y); font-size: 12px; }
+.price-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.price-main { font-size: 17px; font-weight: 900; color: var(--text); }
+.price-old { font-size: 11px; color: var(--muted); text-decoration: line-through; font-weight: 600; }
+
+.qty-box {
+  display: flex; align-items: center; gap: 0; background: var(--g);
+  border-radius: 8px; overflow: hidden; height: 34px;
+}
+.qty-btn { background: none; border: none; color: #fff; font-size: 22px; font-weight: 900; width: 32px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
+.qty-num { color: #fff; font-size: 14px; font-weight: 900; min-width: 24px; text-align: center; }
+.add-btn {
+  background: var(--white); color: var(--g); border: 2px solid var(--g);
+  border-radius: 8px; padding: 0 14px; height: 34px; font-size: 14px; font-weight: 900;
+  cursor: pointer; transition: .15s; white-space: nowrap;
+}
+.add-btn:hover { background: var(--g); color: #fff; }
+
+.drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 600; display: none; }
+.cart-drawer {
+  position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 700;
+  border-radius: 24px 24px 0 0; display: none; max-height: 85vh;
+  flex-direction: column; overflow: hidden;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+}
+.cart-drawer.open, .drawer-overlay.open { display: flex; }
+.drawer-handle { width: 40px; height: 4px; background: #ddd; border-radius: 4px; margin: 12px auto 0; flex-shrink: 0; }
+.drawer-header { padding: 14px 20px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.drawer-header h3 { font-size: 18px; font-weight: 900; }
+.drawer-header small { font-size: 12px; color: var(--muted); font-weight: 600; }
+.drawer-items { flex: 1; overflow-y: auto; padding: 10px 0; }
+.cart-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; }
+.ci-img { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border); }
+.ci-info { flex: 1; }
+.ci-name { font-size: 14px; font-weight: 800; }
+.ci-unit { font-size: 11px; color: var(--muted); font-weight: 600; }
+.ci-price { font-size: 15px; font-weight: 900; }
+.ci-qty { display: flex; align-items: center; gap: 0; background: var(--g); border-radius: 8px; overflow: hidden; }
+.ci-qty button { background: none; border: none; color: #fff; width: 28px; height: 30px; font-size: 18px; font-weight: 900; cursor: pointer; }
+.ci-qty span { color: #fff; font-weight: 900; font-size: 13px; min-width: 22px; text-align: center; }
+
+.bill-section { padding: 12px 20px; border-top: 1px solid var(--border); flex-shrink: 0; }
+.bill-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--muted); }
+.bill-row.total { color: var(--text); font-size: 16px; font-weight: 900; border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 4px; }
+.bill-row.saving { color: var(--g); font-size: 12px; }
+
+.addr-section { padding: 10px 20px; border-top: 1px solid var(--border); flex-shrink: 0; }
+.addr-section textarea {
+  width: 100%; border: 2px solid var(--border); border-radius: 10px; padding: 10px 12px;
+  font-size: 13px; font-weight: 600; font-family: 'Nunito', sans-serif;
+  resize: none; outline: none; transition: .2s;
+}
+.addr-section textarea:focus { border-color: var(--g); }
+.wa-btn {
+  background: #25D366; color: #fff; border: none; border-radius: 14px;
+  padding: 15px; font-size: 16px; font-weight: 900; width: 100%;
+  cursor: pointer; margin-top: 10px; display: flex; align-items: center;
+  justify-content: center; gap: 8px; transition: .2s;
+}
+.wa-btn:hover { background: #1da851; }
+
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
+  border-top: 1px solid var(--border); display: flex; z-index: 500;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+}
+.nav-tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: 10px 0; cursor: pointer; gap: 4px; position: relative; font-size: 11px;
+  font-weight: 800; color: var(--muted); transition: .2s;
+}
+.nav-tab.active { color: var(--g); }
+.nav-tab .icon { font-size: 22px; line-height: 1; }
+.nav-tab::after {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 0; height: 3px; background: var(--g); border-radius: 0 0 4px 4px; transition: .2s;
+}
+.nav-tab.active::after { width: 30px; }
+
+.page { display: none; }
+.page.active { display: block; }
+
+.order-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 14px;
+  margin: 0 16px 12px; padding: 16px; border-left: 4px solid var(--g);
+}
+.order-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.order-id { font-size: 14px; font-weight: 900; }
+.order-total { font-size: 16px; font-weight: 900; color: var(--g); }
+.order-date { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+.order-items { font-size: 12px; color: #555; font-weight: 600; }
+.order-status { display: inline-block; background: #e8f7ea; color: var(--g); font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 6px; margin-top: 8px; }
+
+.profile-hero {
+  background: linear-gradient(135deg, #0c831f, #2db640);
+  padding: 30px 20px; text-align: center; color: #fff;
+}
+.avatar {
+  width: 70px; height: 70px; background: rgba(255,255,255,0.25); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 32px;
+  margin: 0 auto 12px;
+}
+.profile-name { font-size: 22px; font-weight: 900; }
+.profile-phone { font-size: 13px; opacity: 0.85; font-weight: 600; }
+.profile-options { padding: 16px; display: flex; flex-direction: column; gap: 2px; }
+.profile-opt {
+  display: flex; align-items: center; gap: 14px; background: #fff;
+  padding: 16px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 14px;
+  border: 1px solid var(--border); transition: .15px;
+}
+.profile-opt:hover { background: #f8f8f8; }
+.profile-opt .opt-icon { font-size: 22px; width: 32px; text-align: center; }
+.profile-opt .opt-arrow { margin-left: auto; color: #aaa; }
+.profile-opt.danger { color: #c0392b; }
+
+.stats-row { display: flex; gap: 10px; padding: 14px 16px 4px; }
+.stat-card { flex: 1; background: #fff; border-radius: 12px; padding: 14px; text-align: center; border: 1px solid var(--border); }
+.stat-val { font-size: 22px; font-weight: 900; color: var(--g); }
+.stat-label { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+
+.toast {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+  background: #111; color: #fff; padding: 10px 20px; border-radius: 50px;
+  font-size: 13px; font-weight: 700; z-index: 9999; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.toast.show { opacity: 1; }
+
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-state .emo { font-size: 56px; }
+.empty-state h3 { font-size: 18px; font-weight: 900; margin-top: 16px; }
+.empty-state p { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 6px; }
+
+.no-match { padding: 30px 20px; text-align: center; font-weight: 700; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-hero">
+    <div class="login-logo">Jain <span>Store</span></div>
+    <div class="login-tagline">मेन मार्केट, ललितपुर</div>
+  </div>
+
+  <!-- STEP 1: Name + Phone -->
+  <div class="login-form-wrap" id="step-details">
+    <p style="font-size:16px; font-weight:900; color:var(--text);">अपनी जानकारी दर्ज करें</p>
+    <p style="font-size:12px; color:var(--muted); font-weight:600; margin-top:-8px;">OTP आपके नंबर पर भेजा जाएगा</p>
+    <input class="inp" id="cust-name" type="text" placeholder="👤 आपका पूरा नाम">
+    <input class="inp" id="cust-phone" type="tel" placeholder="📞 मोबाइल नंबर (10 अंक)" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')">
+    <button class="login-btn" id="send-otp-btn" onclick="sendOTP()">📲 OTP भेजें</button>
+    <p class="login-note">OTP WhatsApp / SMS पर आएगा</p>
+  </div>
+
+  <!-- STEP 2: OTP Verify -->
+  <div class="login-form-wrap" id="step-otp" style="display:none;">
+    <p style="font-size:16px; font-weight:900; color:var(--text);">OTP Verify करें</p>
+    <div style="background:#e8f7ea; border-radius:12px; padding:12px 16px; margin-bottom:4px; border-left:4px solid var(--g);">
+      <p style="font-size:12px; font-weight:800; color:#1a5c25;" id="otp-sent-msg">📲 OTP भेजा गया...</p>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:center; margin:8px 0;">
+      <input class="inp otp-inp" id="otp-d1" type="tel" maxlength="1" oninput="otpMove(this,'otp-d2')" style="width:54px;text-align:center;font-size:24px;font-weight:900;padding:14px 0;">
+      <input class="inp otp-inp" id="otp-d2" type="tel" maxlength="1" oninput="otpMove(this,'otp-d3')" style="width:54px;text-align:center;font-size:24px;font-weight:900;padding:14px 0;">
+      <input class="inp otp-inp" id="otp-d3" type="tel" maxlength="1" oninput="otpMove(this,'otp-d4')" style="width:54px;text-align:center;font-size:24px;font-weight:900;padding:14px 0;">
+      <input class="inp otp-inp" id="otp-d4" type="tel" maxlength="1" oninput="otpMove(this,null)" style="width:54px;text-align:center;font-size:24px;font-weight:900;padding:14px 0;">
+    </div>
+    <button class="login-btn" id="verify-otp-btn" onclick="verifyOTP()">✅ Verify &amp; Login</button>
+    <div style="display:flex; justify-content:space-between; margin-top:10px;">
+      <button style="background:none;border:none;color:var(--g);font-weight:800;font-size:13px;cursor:pointer;font-family:Nunito,sans-serif;" id="resend-btn" onclick="resendOTP()">🔄 OTP Dobara Bhejein</button>
+      <button style="background:none;border:none;color:#999;font-weight:700;font-size:13px;cursor:pointer;font-family:Nunito,sans-serif;" onclick="backToDetails()">← Wapas</button>
+    </div>
+    <div id="otp-timer" style="text-align:center;font-size:12px;font-weight:700;color:#aaa;margin-top:6px;"></div>
+  </div>
+</div>
+
+<div id="app">
+
+  <div class="topbar">
+    <div class="topbar-row1">
+      <div class="topbar-brand">Jain <span>Store</span></div>
+      <div class="topbar-right">
+        <div class="user-chip" id="user-chip" onclick="showPage('profile')">👤 <span id="uname-chip"></span></div>
+        <button class="cart-btn" onclick="openCart()">🛒 <span class="cbadge" id="cart-count">0</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-bar-wrap">
+    <div class="search-bar">
+      <span class="s-icon">🔍</span>
+      <input type="text" id="search-inp" placeholder="Dry Fruits, Masala और भी ढूंढें..." oninput="onSearch(this.value)">
+      <span id="search-clear" style="cursor:pointer; display:none; color:var(--muted);" onclick="clearSearch()">✕</span>
+    </div>
+  </div>
+
+  <div class="page active" id="page-home">
+    <div class="slider-wrap">
+      <div class="slider-track" id="slider-track">
+        <div class="banner-card">
+          <img class="b-bg" src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=800&q=80" alt="banner">
+          <div class="banner-overlay">
+            <div class="banner-title">Premium<br>Dry Fruits</div>
+            <div class="banner-sub">सीधे Farm से आपके घर</div>
+            <div class="banner-cta">Shop Now →</div>
+          </div>
+        </div>
+        <div class="banner-card">
+          <img class="b-bg" src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=800&q=80" alt="banner">
+          <div class="banner-overlay">
+            <div class="banner-title">ताजे<br>मसाले</div>
+            <div class="banner-sub">खाने को बनाएं लाजवाब</div>
+            <div class="banner-cta">Order करें →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">🗂️ Categories</div>
+    <div class="cats-track" id="cats-track">
+      <div class="cat-chip active" data-cat="all" onclick="filterCat('all', this)">
+        <div class="cat-icon" style="background:#e8f7ea; font-size:28px;">🛒</div>
+        <div class="cat-label">All</div>
+      </div>
+      <div class="cat-chip" data-cat="dry" onclick="filterCat('dry', this)">
+        <div class="cat-icon" style="background:#e8eaf6; font-size:28px;">🥜</div>
+        <div class="cat-label">Dry Fruits</div>
+      </div>
+      <div class="cat-chip" data-cat="Mirch-Masala" onclick="filterCat('Mirch-Masala', this)">
+        <div class="cat-icon" style="background:#fce4ec; font-size:28px;">🌶️</div>
+        <div class="cat-label">Mirch-Masala</div>
+      </div>
+      <div class="cat-chip" data-cat="Pulses & Rice" onclick="filterCat('Pulses & Rice', this)">
+        <div class="cat-icon" style="background:#e8eaf6; font-size:28px;">🌾</div>
+        <div class="cat-label">Pulses & Rice</div>
+      </div>
+      <div class="cat-chip" data-cat="Soap & detergent" onclick="filterCat('Soap & detergent', this)">
+        <div class="cat-icon" style="background:#f3e5f5; font-size:28px;">🧴</div>
+        <div class="cat-label">Soap & detergent</div>
+      </div>
+      <div class="cat-chip" data-cat="oil" onclick="filterCat('oil', this)">
+        <div class="cat-icon" style="background:#fffde7; font-size:28px;">🛢️</div>
+        <div class="cat-label">Oil & Ghee</div>
+      </div>
+      <div class="cat-chip" data-cat="Vegetables" onclick="filterCat('Vegetables', this)">
+        <div class="cat-icon" style="background:#e8f5e9; font-size:28px;">🥦</div>
+        <div class="cat-label">Vegetables</div>
+      </div>
+      <div class="cat-chip" data-cat="Fruits" onclick="filterCat('Fruits', this)">
+        <div class="cat-icon" style="background:#fff3e0; font-size:28px;">🍎</div>
+        <div class="cat-label">Fruits</div>
+      </div>
+    </div>
+
+    <div class="section-title" id="section-label">🥜 सभी Products</div>
+    <div class="prod-grid" id="p-grid"></div>
+    <div id="no-match" class="no-match" style="display:none;">कोई product नहीं मिला 😕</div>
+  </div>
+
+  <div class="page" id="page-orders">
+    <div class="section-title">📦 My Orders</div>
+    <div id="order-list"></div>
+  </div>
+
+  <div class="page" id="page-profile">
+    <div class="profile-hero">
+      <div class="avatar">👤</div>
+      <div class="profile-name" id="p-name"></div>
+      <div class="profile-phone" id="p-phone"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val" id="stat-orders">0</div>
+        <div class="stat-label">Orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="stat-spent">₹0</div>
+        <div class="stat-label">Total Spent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">⭐ 4.8</div>
+        <div class="stat-label">Rating</div>
+      </div>
+    </div>
+    <div class="profile-options">
+      <div class="profile-opt" onclick="showPage('orders'); loadOrders();">
+        <span class="opt-icon">📦</span> My Orders <span class="opt-arrow">›</span>
+      </div>
+      <div class="profile-opt">
+        <span class="opt-icon">📍</span> Saved Addresses <span class="opt-arrow">›</span>
+      </div>
+      <div class="profile-opt">
+        <span class="opt-icon">💳</span> Payment Methods <span class="opt-arrow">›</span>
+      </div>
+      <div class="profile-opt">
+        <span class="opt-icon">💬</span> Help & Support <span class="opt-arrow">›</span>
+      </div>
+      <div class="profile-opt danger" onclick="logout()">
+        <span class="opt-icon">🚪</span> Logout
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-nav" id="bottom-nav">
+  <div class="nav-tab active" id="nav-home" onclick="showPage('home')">
+    <span class="icon">🏠</span> Home
+  </div>
+  <div class="nav-tab" id="nav-orders" onclick="showPage('orders')">
+    <span class="icon">📦</span> Orders
+  </div>
+  <div class="nav-tab" id="nav-profile" onclick="showPage('profile')">
+    <span class="icon">👤</span> Account
+  </div>
+</div>
+
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-header">
+    <h3>🛒 Aapka Cart</h3>
+    <small id="drawer-sub">items added</small>
+  </div>
+  <div class="drawer-items" id="cart-items-list"></div>
+  <div class="bill-section">
+    <div class="bill-row"><span>Item Total</span><span id="bill-item-total">₹0</span></div>
+    <div class="bill-row saving" id="bill-saving-row" style="display:none;"><span>🟢 आपकी बचत</span><span id="bill-saving">₹0</span></div>
+    <div class="bill-row"><span>Delivery Fee</span><span id="bill-delivery">₹30</span></div>
+    <div class="bill-row total"><span>Total Amount</span><span id="bill-total">₹0</span></div>
+  </div>
+  <div class="addr-section">
+    <textarea id="addr" rows="2" placeholder="🏠 Delivery Address..."></textarea>
+    <button class="wa-btn" onclick="sendWA()">
+      <span>📲</span> WhatsApp पर Order भेजें
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =====================================================
+// CONFIGURATION
+// =====================================================
+const SHOP_WA = "919260903360";
+
+// ⬇️ YAHAN APNE GOOGLE APPS SCRIPT WEB APP URLs DAALO
+// Sheet 1 = Inventory (Products)
+// Sheet 2 = Orders
+const INVENTORY_SHEET_URL = localStorage.getItem('invSheetUrl') || '';
+const ORDERS_SHEET_URL    = localStorage.getItem('ordSheetUrl') || '';
+
+let cart = {};
+let currentUser = null;
+let currentCat = 'all';
+let searchQ = '';
+
+const products = [
+  {id:1, name:'Premium Kaju', price:200, mrp:350, unit:'250g', cat:'dry', badge:'best', img:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80', rating:4.8, reviews:128},
+  {id:2, name:'Special Badam', price:300, mrp:400, unit:'250g', cat:'dry', badge:'off', img:'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=400&q=80', rating:4.7, reviews:95},
+  {id:3, name:'Lal Mirch Powder', price:55, mrp:70, unit:'200g', cat:'Mirch-Masala', badge:'off', img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', rating:4.6, reviews:200},
+  {id:4, name:'Shuddh Haldi', price:45, mrp:60, unit:'200g', cat:'Mirch-Masala', badge:'new', img:'https://images.unsplash.com/photo-1615485541147-1131185bb9b9?w=400&q=80', rating:4.9, reviews:310},
+  {id:5, name:'Phool Makhana', price:180, mrp:220, unit:'200g', cat:'dry', badge:'best', img:'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=400&q=80', rating:4.5, reviews:75},
+  {id:6, name:'Sabut Jeera', price:70, mrp:90, unit:'200g', cat:'Mirch-Masala', badge:'off', img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', rating:4.6, reviews:142},
+  {id:7, name:'Kishmish', price:120, mrp:150, unit:'250g', cat:'dry', badge:'off', img:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80', rating:4.4, reviews:88},
+  {id:8, name:'Kala Namak', price:30, mrp:40, unit:'200g', cat:'Mirch-Masala', badge:'new', img:'https://images.unsplash.com/photo-1615485541147-1131185bb9b9?w=400&q=80', rating:4.7, reviews:220},
+  {id:9, name:'Chia Seeds', price:150, mrp:190, unit:'200g', cat:'seeds', badge:'new', img:'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=400&q=80', rating:4.6, reviews:160},
+  {id:10, name:'Flax Seeds', price:90, mrp:120, unit:'250g', cat:'seeds', badge:'off', img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', rating:4.5, reviews:95},
+  {id:11, name:'Shakkar', price:65, mrp:80, unit:'500g', cat:'sweets', badge:'best', img:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80', rating:4.8, reviews:300},
+  {id:12, name:'Pure Ghee', price:550, mrp:650, unit:'500ml', cat:'oil', badge:'best', img:'https://images.unsplash.com/photo-1615485541147-1131185bb9b9?w=400&q=80', rating:4.9, reviews:410},
+];
+
+// =====================================================
+// OTP VERIFICATION SYSTEM
+// =====================================================
+let generatedOTP = '';
+let otpPhone = '';
+let otpName = '';
+let otpTimerInterval = null;
+
+function sendOTP() {
+  const n = document.getElementById('cust-name').value.trim();
+  const p = document.getElementById('cust-phone').value.trim();
+  if(!n) { showToast('❌ Naam likhna zaroori hai!'); return; }
+  if(p.length !== 10 || !/^\d{10}$/.test(p)) { showToast('❌ Sahi 10 digit number likhein!'); return; }
+
+  otpName = n; otpPhone = p;
+  // Generate 4-digit OTP
+  generatedOTP = String(Math.floor(1000 + Math.random() * 9000));
+
+  const btn = document.getElementById('send-otp-btn');
+  btn.textContent = '⏳ OTP bhej rahe hain...';
+  btn.disabled = true;
+
+  // Send OTP via WhatsApp (opens wa.me link)
+  const otpMsg = `*Jain Store - OTP Verification*\n\nAapka OTP: *${generatedOTP}*\n\nYeh OTP 5 minute ke liye valid hai.\n\n-Jain Store, Lalitpur`;
+  setTimeout(() => {
+    window.open(`https://wa.me/91${p}?text=${encodeURIComponent(otpMsg)}`);
+    document.getElementById('otp-sent-msg').textContent = `📲 OTP ${p} par WhatsApp se bheja gaya`;
+    document.getElementById('step-details').style.display = 'none';
+    document.getElementById('step-otp').style.display = 'flex';
+    document.getElementById('otp-d1').focus();
+    btn.textContent = '📲 OTP भेजें';
+    btn.disabled = false;
+    startOtpTimer(300); // 5 minute
+  }, 600);
+}
+
+function startOtpTimer(secs) {
+  clearInterval(otpTimerInterval);
+  const el = document.getElementById('otp-timer');
+  const resendBtn = document.getElementById('resend-btn');
+  resendBtn.disabled = true; resendBtn.style.opacity = '0.4';
+  otpTimerInterval = setInterval(() => {
+    secs--;
+    const m = Math.floor(secs/60), s = secs%60;
+    el.textContent = `OTP valid: ${m}:${s<10?'0'+s:s}`;
+    if(secs <= 0) {
+      clearInterval(otpTimerInterval);
+      el.textContent = '⏱️ OTP expire ho gaya. Dobara bhejein.';
+      resendBtn.disabled = false; resendBtn.style.opacity = '1';
+      generatedOTP = '';
+    }
+  }, 1000);
+}
+
+function resendOTP() {
+  document.getElementById('otp-d1').value=''; document.getElementById('otp-d2').value='';
+  document.getElementById('otp-d3').value=''; document.getElementById('otp-d4').value='';
+  generatedOTP = String(Math.floor(1000 + Math.random() * 9000));
+  const otpMsg = `*Jain Store - OTP*\n\nAapka naya OTP: *${generatedOTP}*\n\n-Jain Store, Lalitpur`;
+  window.open(`https://wa.me/91${otpPhone}?text=${encodeURIComponent(otpMsg)}`);
+  showToast('📲 Naya OTP bheja gaya!');
+  startOtpTimer(300);
+  document.getElementById('otp-d1').focus();
+}
+
+function backToDetails() {
+  clearInterval(otpTimerInterval);
+  generatedOTP = '';
+  document.getElementById('step-otp').style.display = 'none';
+  document.getElementById('step-details').style.display = 'flex';
+}
+
+function otpMove(inp, nextId) {
+  inp.value = inp.value.replace(/\D/g,'');
+  if(inp.value.length === 1 && nextId) {
+    document.getElementById(nextId).focus();
+  }
+}
+
+function verifyOTP() {
+  const entered = document.getElementById('otp-d1').value +
+                  document.getElementById('otp-d2').value +
+                  document.getElementById('otp-d3').value +
+                  document.getElementById('otp-d4').value;
+  if(entered.length < 4) { showToast('❌ Poora OTP daalo!'); return; }
+  if(!generatedOTP) { showToast('❌ OTP expire ho gaya. Dobara bhejein.'); return; }
+  if(entered === generatedOTP) {
+    clearInterval(otpTimerInterval);
+    const u = { n: otpName, p: otpPhone };
+    localStorage.setItem('jainUser', JSON.stringify(u));
+    // Log login to Orders sheet
+    const sheetUrl = localStorage.getItem('ordSheetUrl') || ORDERS_SHEET_URL;
+    if(sheetUrl) {
+      fetch(`${sheetUrl}?act=Login&n=${encodeURIComponent(otpName)}&p=${encodeURIComponent(otpPhone)}`, { mode:'no-cors' }).catch(()=>{});
+    }
+    showToast('✅ Login successful!');
+    initApp(u);
+  } else {
+    showToast('❌ Galat OTP! Dobara try karein.');
+    document.getElementById('otp-d1').value=''; document.getElementById('otp-d2').value='';
+    document.getElementById('otp-d3').value=''; document.getElementById('otp-d4').value='';
+    document.getElementById('otp-d1').focus();
+  }
+}
+
+function initApp(u) {
+  currentUser = u;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('uname-chip').textContent = u.n.split(' ')[0];
+  document.getElementById('p-name').textContent = u.n;
+  document.getElementById('p-phone').textContent = '📞 ' + u.p;
+  renderProducts();
+  loadOrderStats();
+}
+
+function logout() {
+  localStorage.removeItem('jainUser');
+  location.reload();
+}
+
+// =====================================================
+// PRODUCTS
+// =====================================================
+function getDiscount(p) { return Math.round((1 - p.price/p.mrp)*100); }
+
+function renderProducts() {
+  const q = searchQ.toLowerCase();
+  const list = products.filter(p => {
+    const catOk = currentCat === 'all' || p.cat === currentCat;
+    const searchOk = !q || p.name.toLowerCase().includes(q);
+    return catOk && searchOk;
+  });
+  const grid = document.getElementById('p-grid');
+  const nomatch = document.getElementById('no-match');
+  if(!list.length) { grid.innerHTML=''; nomatch.style.display='block'; return; }
+  nomatch.style.display = 'none';
+  grid.innerHTML = list.map(p => {
+    const qty = cart[p.id] || 0;
+    const disc = getDiscount(p);
+    const badges = {off:`<span class="badge badge-off">${disc}% Off</span>`, best:`<span class="badge badge-best">Best Seller</span>`, new:`<span class="badge badge-new">New</span>`};
+    return `<div class="prod-card" id="card-${p.id}">
+      <div class="badge-row">${badges[p.badge]||''}</div>
+      <div class="prod-img-wrap"><img src="${p.img}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400'"></div>
+      <div class="prod-body">
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-unit">${p.unit}</div>
+        <div class="prod-rating"><span class="star">★</span>${p.rating} (${p.reviews})</div>
+        <div class="price-row">
+          <div><div class="price-main">₹${p.price}</div><div class="price-old">₹${p.mrp}</div></div>
+          ${qty === 0
+            ? `<button class="add-btn" onclick="addItem(${p.id})">Add</button>`
+            : `<div class="qty-box">
+                <button class="qty-btn" onclick="removeItem(${p.id})">−</button>
+                <span class="qty-num">${qty}</span>
+                <button class="qty-btn" onclick="addItem(${p.id})" ${qty>=5?'disabled style="opacity:.4"':''}>+</button>
+              </div>`
+          }
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addItem(id) {
+  if((cart[id]||0) >= 5) { showToast('Max 5 items per product'); return; }
+  cart[id] = (cart[id]||0) + 1;
+  updateCartCount(); renderProducts();
+}
+function removeItem(id) {
+  if(!cart[id]) return;
+  cart[id]--;
+  if(cart[id]<=0) delete cart[id];
+  updateCartCount(); renderProducts();
+}
+function updateCartCount() {
+  const total = Object.values(cart).reduce((a,b)=>a+b,0);
+  document.getElementById('cart-count').textContent = total;
+}
+
+function filterCat(cat, el) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const labels = {all:'🛒 सभी Products', dry:'🥜 Dry Fruits', 'Mirch-Masala':'🌶️ Mirch-Masala', 'Pulses & Rice':'🌾 Pulses & Rice', seeds:'🌱 Seeds', sweets:'🍬 Sweets', oil:'🛢️ Oil & Ghee', Vegetables:'🥦 Vegetables', Fruits:'🍎 Fruits', 'Soap & detergent':'🧴 Soap & Detergent'};
+  document.getElementById('section-label').textContent = labels[cat] || 'Products';
+  renderProducts();
+}
+
+function onSearch(v) {
+  searchQ = v;
+  document.getElementById('search-clear').style.display = v ? 'block' : 'none';
+  renderProducts();
+}
+function clearSearch() {
+  document.getElementById('search-inp').value = '';
+  searchQ = '';
+  document.getElementById('search-clear').style.display = 'none';
+  renderProducts();
+}
+
+// =====================================================
+// CART
+// =====================================================
+function openCart() {
+  const total = Object.values(cart).reduce((a,b)=>a+b,0);
+  if(!total) { showToast('Cart khali hai!'); return; }
+  renderCartDrawer();
+  document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+
+function renderCartDrawer() {
+  const keys = Object.keys(cart).filter(id => cart[id] > 0);
+  let itemTotal = 0;
+  let mrpTotal = 0;
+  const html = keys.map(id => {
+    const p = products.find(x => x.id == id);
+    const qty = cart[id];
+    itemTotal += p.price * qty;
+    mrpTotal += p.mrp * qty;
+    return `<div class="cart-item">
+      <img class="ci-img" src="${p.img}">
+      <div class="ci-info">
+        <div class="ci-name">${p.name}</div>
+        <div class="ci-unit">${p.unit}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        <div class="ci-price">₹${p.price * qty}</div>
+        <div class="ci-qty">
+          <button onclick="removeItem(${id}); renderCartDrawer();">−</button>
+          <span>${qty}</span>
+          <button onclick="addItem(${id}); renderCartDrawer();">+</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('cart-items-list').innerHTML = html;
+  document.getElementById('drawer-sub').textContent = `${keys.length} item${keys.length>1?'s':''} added`;
+
+  let saving = mrpTotal - itemTotal;
+  let delivery = itemTotal >= 500 ? 0 : 30;
+  const grandTotal = itemTotal + delivery;
+
+  document.getElementById('bill-item-total').textContent = '₹' + itemTotal;
+  document.getElementById('bill-delivery').textContent = delivery === 0 ? '🟢 Free' : '₹' + delivery;
+  document.getElementById('bill-total').textContent = '₹' + grandTotal;
+
+  if(saving > 0) {
+    document.getElementById('bill-saving').textContent = '₹' + saving;
+    document.getElementById('bill-saving-row').style.display = 'flex';
+  } else {
+    document.getElementById('bill-saving-row').style.display = 'none';
+  }
+}
+
+// =====================================================
+// WHATSAPP ORDER - Price WA message mein NAHI, Sheet mein HAAN
+// =====================================================
+function sendWA() {
+  const addr = document.getElementById('addr').value.trim();
+  if(!addr) { showToast('Address likhna zaroori hai!'); return; }
+
+  let itemTotal = 0;
+  const orderedItems = [];
+
+  // Items collect karo with price (sheet ke liye)
+  Object.keys(cart).forEach(id => {
+    if(!cart[id]) return;
+    const p = products.find(x => x.id == id);
+    const qty = cart[id];
+    const subtotal = p.price * qty;
+    itemTotal += subtotal;
+    orderedItems.push({ name: p.name, unit: p.unit, qty, price: p.price, subtotal });
+  });
+
+  if(itemTotal < 500) { showToast('Minimum order ₹500 hona chahiye'); return; }
+
+  let delivery = itemTotal >= 500 ? 0 : 30;
+  const grandTotal = itemTotal + delivery;
+
+  // ✅ WHATSAPP MESSAGE - Price nahi hai
+  let waMsg = `*🛒 JAIN STORE LALITPUR*\n`;
+  waMsg += `👤 *Naam:* ${currentUser.n}\n`;
+  waMsg += `📞 *Phone:* ${currentUser.p}\n`;
+  waMsg += `🏠 *Address:* ${addr}\n\n`;
+  waMsg += `*📦 Ordered Items:*\n`;
+  orderedItems.forEach(item => {
+    waMsg += `✅ *${item.name}* (${item.unit}) × ${item.qty}\n`;
+  });
+  waMsg += `\n⏰ ${new Date().toLocaleString('hi-IN')}`;
+
+  // ✅ GOOGLE SHEET 2 (Orders) - Price ke saath (Excel mein dikhega)
+  const sheetUrl = localStorage.getItem('ordSheetUrl') || ORDERS_SHEET_URL;
+  if(sheetUrl) {
+    const sheetItems = orderedItems.map(i => `${i.name}(${i.unit})x${i.qty}=Rs${i.subtotal}`).join(' | ');
+    const ordUrl = `${sheetUrl}?act=newOrder&orderId=${encodeURIComponent('ORD'+Date.now())}&n=${encodeURIComponent(currentUser.n)}&p=${encodeURIComponent(currentUser.p)}&addr=${encodeURIComponent(addr)}&items=${encodeURIComponent(sheetItems)}&itemTotal=${itemTotal}&delivery=${delivery}&total=${grandTotal}&date=${encodeURIComponent(new Date().toLocaleString())}`;
+    fetch(ordUrl, { mode:'no-cors' }).catch(()=>{});
+  }
+
+  // ✅ LOCAL STORAGE mein save (Orders page ke liye)
+  const orderData = {
+    id: 'ORD' + Date.now(),
+    date: new Date().toLocaleString(),
+    items: orderedItems.map(i => `${i.name} (${i.unit}) x ${i.qty}`).join(', '),
+    itemsWithPrice: orderedItems,
+    total: grandTotal,
+    itemTotal: itemTotal,
+    delivery: delivery,
+    phone: currentUser.p,
+    addr: addr
+  };
+
+  const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
+  orders.push(orderData);
+  localStorage.setItem('jainOrders', JSON.stringify(orders));
+
+  // WhatsApp open karo
+  window.open(`https://wa.me/${SHOP_WA}?text=${encodeURIComponent(waMsg)}`);
+
+  // Cart clear
+  cart = {};
+  updateCartCount(); renderProducts(); closeCart(); loadOrderStats();
+  showToast('✅ Order WhatsApp par bhej diya gaya!');
+}
+
+// =====================================================
+// ORDERS
+// =====================================================
+function loadOrders() {
+  const el = document.getElementById('order-list');
+  if(!el) return;
+
+  const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
+  const user = currentUser || JSON.parse(localStorage.getItem('jainUser') || '{}');
+  const mine = orders.filter(o => o.phone === user.p);
+
+  if(mine.length === 0) {
+    el.innerHTML = '<div style="text-align:center; padding:40px; color:#999; font-weight:700;">Koi order nahi mila.<br>Naya order karke dekhein. 🛒</div>';
+    return;
+  }
+
+  el.innerHTML = mine.reverse().map(o => `
+    <div class="order-card">
+      <div class="order-header">
+        <span class="order-id">🆔 ${o.id}</span>
+        <span class="order-total">₹${o.total}</span>
+      </div>
+      <p class="order-date">📅 ${o.date}</p>
+      <p class="order-items">📦 ${o.items}</p>
+      <span class="order-status">✅ Placed</span>
+      <button onclick="downloadInvoice('${o.id}')" style="display:block; width:100%; background:var(--g); color:white; border:none; padding:9px; border-radius:9px; cursor:pointer; margin-top:10px; font-weight:800; font-size:13px; font-family:Nunito,sans-serif;">
+        📄 Invoice Download (PDF)
+      </button>
+    </div>
+  `).join('');
+}
+
+function loadOrderStats() {
+  const orders = JSON.parse(localStorage.getItem('jainOrders')||'[]');
+  const mine = orders.filter(o => o.phone === currentUser?.p);
+  const spent = mine.reduce((a,o)=>a+o.total,0);
+  document.getElementById('stat-orders').textContent = mine.length;
+  document.getElementById('stat-spent').textContent = '₹'+spent;
+}
+
+function showPage(pg) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+pg).classList.add('active');
+  const navEl = document.getElementById('nav-'+pg);
+  if(navEl) navEl.classList.add('active');
+  if(pg==='orders') loadOrders();
+  window.scrollTo(0,0);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+// =====================================================
+// PDF INVOICE
+// =====================================================
+function downloadInvoice(orderId) {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const orders = JSON.parse(localStorage.getItem('jainOrders') || '[]');
+    const o = orders.find(x => x.id === orderId);
+    if(!o) return alert("Order data nahi mila!");
+
+    const savedUser = JSON.parse(localStorage.getItem('jainUser') || '{}');
+    const userName = savedUser.n || "Customer";
+
+    doc.setFontSize(22);
+    doc.setTextColor(12, 131, 31);
+    doc.text("JAIN STORE - LALITPUR", 14, 20);
+
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Invoice No: ${o.id}`, 14, 30);
+    doc.text(`Date: ${o.date || new Date().toLocaleDateString()}`, 14, 35);
+    doc.text(`Customer: ${userName}`, 14, 40);
+    doc.text(`Phone: ${o.phone || ''}`, 14, 45);
+    doc.text(`Address: ${o.addr || ''}`, 14, 50);
+
+    let tableBody = [];
+    if(o.itemsWithPrice && Array.isArray(o.itemsWithPrice)) {
+      tableBody = o.itemsWithPrice.map(item => [
+        `${item.name} (${item.unit})`,
+        item.qty,
+        `Rs. ${item.price}`,
+        `Rs. ${item.subtotal}`
+      ]);
+    } else {
+      tableBody = [[o.items, '', '', `Rs. ${o.itemTotal || o.total}`]];
+    }
+
+    if(doc.autoTable) {
+      doc.autoTable({
+        startY: 58,
+        head: [['Product', 'Qty', 'Rate', 'Amount']],
+        body: tableBody,
+        theme: 'striped',
+        headStyles: { fillColor: [12, 131, 31] },
+        styles: { fontSize: 10 }
+      });
+      const finalY = doc.lastAutoTable.finalY + 8;
+      if(o.delivery === 0) {
+        doc.setTextColor(12, 131, 31);
+        doc.text(`Delivery: FREE`, 14, finalY);
+      } else {
+        doc.setTextColor(0,0,0);
+        doc.text(`Delivery: Rs. ${o.delivery}`, 14, finalY);
+      }
+      doc.setFontSize(13);
+      doc.setTextColor(0,0,0);
+      doc.text(`Total Amount: Rs. ${o.total}`, 14, finalY + 8);
+      doc.setFontSize(10);
+      doc.setTextColor(100,100,100);
+      doc.text("Thank you for shopping at Jain Store!", 14, finalY + 18);
+    } else {
+      doc.text(`Items: ${o.items}`, 14, 65);
+      doc.text(`Total: Rs. ${o.total}`, 14, 75);
+    }
+
+    doc.save(`Invoice_${o.id}.pdf`);
+  } catch(err) {
+    console.error("PDF Error:", err);
+    alert("PDF banane mein problem aayi.");
+  }
+}
+
+// =====================================================
+// GOOGLE SHEETS BACKEND SETUP
+// Sheet 1 = Inventory/Products | Sheet 2 = Orders
+// =====================================================
+
+// Sheet 1 (Inventory) se products load karo
+async function loadProductsFromInventorySheet() {
+  const url = localStorage.getItem('invSheetUrl');
+  if(!url) return;
+  try {
+    const res = await fetch(`${url}?act=getProducts`);
+    const data = await res.json();
+    if(data && Array.isArray(data.products) && data.products.length) {
+      const stored = JSON.parse(localStorage.getItem('jainProducts') || '[]');
+      // Merge: sheet products override stored ones by id
+      const merged = [...defaultProducts];
+      data.products.forEach(sp => {
+        const idx = merged.findIndex(p => p.id == sp.id);
+        if(idx !== -1) merged[idx] = {...merged[idx], ...sp};
+        else merged.push(sp);
+      });
+      localStorage.setItem('jainProducts', JSON.stringify(merged));
+      products.length = 0;
+      merged.forEach(p => products.push(p));
+      renderProducts();
+    }
+  } catch(e) {}
+}
+
+function getAllProducts() {
+  const stored = JSON.parse(localStorage.getItem('jainProducts') || 'null');
+  return stored || [...products];
+}
+function saveAllProducts(arr) {
+  localStorage.setItem('jainProducts', JSON.stringify(arr));
+  products.length = 0;
+  arr.forEach(p => products.push(p));
+  renderProducts();
+}
+
+// =====================================================
+// APP INIT
+// =====================================================
+window.addEventListener('load', () => {
+  // Saved products load karo
+  const stored = localStorage.getItem('jainProducts');
+  if(stored) {
+    const arr = JSON.parse(stored);
+    products.length = 0;
+    arr.forEach(p => products.push(p));
+  }
+
+  // Auto login check
+  const saved = localStorage.getItem('jainUser');
+  if(saved) initApp(JSON.parse(saved));
+
+  // Sheet 1 se inventory sync karo
+  loadProductsFromInventorySheet();
+
+  // Banner auto-slide
+  let idx = 0;
+  setInterval(()=>{
+    const track = document.getElementById('slider-track');
+    if(!track) return;
+    const w = track.parentElement.offsetWidth - 32;
+    idx = (idx+1) % 2;
+    track.scrollTo({left: idx * (w+12), behavior:'smooth'});
+  }, 4000);
+});
+
+// =====================================================
+// GOOGLE SHEET URL SETUP (console se call karein)
+// localStorage.setItem('invSheetUrl', 'YOUR_SHEET1_URL_HERE');
+// localStorage.setItem('ordSheetUrl', 'YOUR_SHEET2_URL_HERE');
+// =====================================================
+
+/*
+===========================================================
+SHEET 1 — INVENTORY (Products) — Apps Script Code:
+===========================================================
+Columns: id | name | price | mrp | unit | cat | badge | img | rating | reviews
+
+function doGet(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName('Inventory') || ss.getSheets()[0];
+  const action = e.parameter.act;
+
+  if (action === 'getProducts') {
+    const data = sheet.getDataRange().getValues();
+    const headers = data[0];
+    const products = data.slice(1).map(row => {
+      const obj = {};
+      headers.forEach((h, i) => { obj[h] = row[i]; });
+      return obj;
+    }).filter(p => p.name && p.price);
+    return ContentService
+      .createTextOutput(JSON.stringify({ products }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: 'ok' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+===========================================================
+SHEET 2 — ORDERS — Apps Script Code:
+===========================================================
+Auto columns: Order ID | Customer | Phone | Address | Items | Item Total | Delivery | Grand Total | Date
+
+function doGet(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName('Orders');
+  if (!sheet) {
+    sheet = ss.insertSheet('Orders');
+    const headers = ['Order ID','Customer','Phone','Address','Items','Item Total','Delivery','Grand Total','Date'];
+    sheet.appendRow(headers);
+    sheet.getRange(1,1,1,9).setFontWeight('bold').setBackground('#0c831f').setFontColor('#ffffff');
+    sheet.setFrozenRows(1);
+  }
+
+  const p = e.parameter;
+
+  if (p.act === 'newOrder') {
+    sheet.appendRow([p.orderId, p.n, p.p, p.addr, p.items,
+      Number(p.itemTotal), Number(p.delivery), Number(p.total), p.date]);
+    sheet.autoResizeColumns(1, 9);
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'saved' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (p.act === 'Login') {
+    let logSheet = ss.getSheetByName('Logins');
+    if (!logSheet) {
+      logSheet = ss.insertSheet('Logins');
+      logSheet.appendRow(['Name','Phone','Time']);
+      logSheet.getRange(1,1,1,3).setFontWeight('bold').setBackground('#1a1a2e').setFontColor('#ffffff');
+    }
+    logSheet.appendRow([p.n, p.p, new Date().toLocaleString()]);
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'logged' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: 'ok' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+===========================================================
+SETUP STEPS (Dono sheets ke liye alag-alag karein):
+1. Google Sheet kholo → Extensions → Apps Script
+2. Upar wala script paste karein
+3. Deploy → New Deployment → Web App
+4. Execute as: Me | Who has access: Anyone
+5. URL copy karein
+6. Browser console mein:
+   localStorage.setItem('invSheetUrl','SHEET1_URL');
+   localStorage.setItem('ordSheetUrl','SHEET2_URL');
+===========================================================
+*/
+</script>
+</body>
+</html>
 
