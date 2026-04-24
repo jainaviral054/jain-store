@@ -124,6 +124,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 .prod-card {
   background: var(--card); border-radius: var(--radius); overflow: hidden;
   border: 1px solid var(--border); transition: box-shadow .2s; position: relative;
+  display: flex; flex-direction: column;
 }
 .prod-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
 .badge-row { position: absolute; top: 8px; left: 8px; display: flex; gap: 4px; z-index: 1; }
@@ -135,7 +136,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 .prod-img-wrap { height: 115px; background: #fafafa; display: flex; align-items: center; justify-content: center; padding: 8px; }
 .prod-img-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
 
-.prod-body { padding: 10px; }
+.prod-body { padding: 10px; flex: 1; }
 .prod-name { font-size: 13px; font-weight: 800; line-height: 1.3; min-height: 34px; }
 .prod-unit { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
 .prod-rating { display: flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; color: #666; margin-top: 3px; }
@@ -156,6 +157,32 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
   cursor: pointer; transition: .15s; white-space: nowrap;
 }
 .add-btn:hover { background: var(--g); color: #fff; }
+
+/* Weight variant buttons */
+.weight-btns { display: flex; gap: 5px; flex-wrap: wrap; margin: 6px 0 4px; }
+.wt-btn {
+  border: 1.5px solid var(--border); background: #fff; border-radius: 7px;
+  padding: 3px 9px; font-size: 11px; font-weight: 800; cursor: pointer;
+  color: var(--text); transition: .15s; font-family: 'Nunito', sans-serif;
+}
+.wt-btn.active { background: var(--g); color: #fff; border-color: var(--g); }
+.wt-btn:hover:not(.active) { border-color: var(--g); color: var(--g); }
+
+/* Full-width Add button at bottom of card */
+.add-btn-full {
+  background: var(--g); color: #fff; border: none; border-radius: 0 0 var(--radius) var(--radius);
+  padding: 11px; font-size: 14px; font-weight: 900; width: 100%;
+  cursor: pointer; transition: .15s; font-family: 'Nunito', sans-serif;
+  display: block; margin-top: 8px;
+}
+.add-btn-full:hover { background: var(--g2); }
+.qty-box-full {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--g); border-radius: 0 0 var(--radius) var(--radius);
+  overflow: hidden; height: 40px; margin-top: 8px;
+}
+.qty-box-full .qty-btn { background: none; border: none; color: #fff; font-size: 24px; font-weight: 900; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.qty-box-full .qty-num { color: #fff; font-size: 15px; font-weight: 900; min-width: 30px; text-align: center; }
 
 .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 600; display: none; }
 .cart-drawer {
@@ -637,9 +664,23 @@ function logout() {
 }
 
 // =====================================================
-// PRODUCTS
+// PRODUCTS — Multi-variant (weight) grouped cards
 // =====================================================
 function getDiscount(p) { return Math.round((1 - p.price/p.mrp)*100); }
+
+// Selected variant per group (baseName → variantId)
+const selectedVariant = {};
+
+// Group products by baseName (same name, different unit = variants)
+function groupProducts(list) {
+  const groups = {};
+  list.forEach(p => {
+    const key = p.name.trim().toLowerCase();
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(p);
+  });
+  return Object.values(groups);
+}
 
 function renderProducts() {
   const q = searchQ.toLowerCase();
@@ -652,31 +693,74 @@ function renderProducts() {
   const nomatch = document.getElementById('no-match');
   if(!list.length) { grid.innerHTML=''; nomatch.style.display='block'; return; }
   nomatch.style.display = 'none';
-  grid.innerHTML = list.map(p => {
+
+  const groups = groupProducts(list);
+  const badgeLabels = {best:'BEST', hot:'HOT', new:'NEW', off:'OFFER'};
+  const badgeClass = {best:'badge-best', hot:'badge-new', new:'badge-new', off:'badge-off'};
+
+  grid.innerHTML = groups.map(variants => {
+    const groupKey = variants[0].name.trim().toLowerCase();
+    // Default selected = first variant
+    if(!selectedVariant[groupKey]) selectedVariant[groupKey] = variants[0].id;
+    const selId = selectedVariant[groupKey];
+    const p = variants.find(v => v.id == selId) || variants[0];
     const qty = cart[p.id] || 0;
     const disc = getDiscount(p);
-    const badges = {off:`<span class="badge badge-off">${disc}% Off</span>`, best:`<span class="badge badge-best">Best Seller</span>`, new:`<span class="badge badge-new">New</span>`};
-    return `<div class="prod-card" id="card-${p.id}">
-      <div class="badge-row">${badges[p.badge]||''}</div>
+
+    // Badge from selected variant
+    let badgeHtml = '';
+    if(p.badge) {
+      const bk = p.badge.toString().toLowerCase();
+      const label = bk === 'best' ? 'BEST' : bk === 'hot' ? 'HOT' : bk === 'new' ? 'NEW' : bk === 'off' ? `${disc}% Off` : p.badge;
+      const cls = badgeClass[bk] || 'badge-off';
+      badgeHtml = `<span class="badge ${cls}">${label}</span>`;
+    }
+
+    // Weight buttons (only if multiple variants)
+    let wtBtnsHtml = '';
+    if(variants.length > 1) {
+      wtBtnsHtml = `<div class="weight-btns">` +
+        variants.map(v => `<button class="wt-btn${v.id == selId ? ' active' : ''}" onclick="selectVariant('${groupKey}',${v.id})">${v.unit}</button>`).join('') +
+        `</div>`;
+    }
+
+    // Add / qty button (full width at bottom)
+    const addHtml = qty === 0
+      ? `<button class="add-btn-full" onclick="addItem(${p.id})">Add +</button>`
+      : `<div class="qty-box-full">
+          <button class="qty-btn" onclick="removeItem(${p.id})">−</button>
+          <span class="qty-num">${qty}</span>
+          <button class="qty-btn" onclick="addItem(${p.id})" ${qty>=5?'disabled style="opacity:.4"':''}>+</button>
+        </div>`;
+
+    return `<div class="prod-card" id="card-${groupKey.replace(/\s+/g,'_')}">
+      <div class="badge-row">${badgeHtml}</div>
       <div class="prod-img-wrap"><img src="${p.img}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400'"></div>
       <div class="prod-body">
         <div class="prod-name">${p.name}</div>
-        <div class="prod-unit">${p.unit}</div>
         <div class="prod-rating"><span class="star">★</span>${p.rating} (${p.reviews})</div>
-        <div class="price-row">
-          <div><div class="price-main">₹${p.price}</div><div class="price-old">₹${p.mrp}</div></div>
-          ${qty === 0
-            ? `<button class="add-btn" onclick="addItem(${p.id})">Add</button>`
-            : `<div class="qty-box">
-                <button class="qty-btn" onclick="removeItem(${p.id})">−</button>
-                <span class="qty-num">${qty}</span>
-                <button class="qty-btn" onclick="addItem(${p.id})" ${qty>=5?'disabled style="opacity:.4"':''}>+</button>
-              </div>`
-          }
+        ${wtBtnsHtml}
+        <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px;">
+          <div class="price-main">₹${p.price}</div>
+          ${p.mrp > p.price ? `<div class="price-old">₹${p.mrp}</div>` : ''}
         </div>
       </div>
+      ${addHtml}
     </div>`;
   }).join('');
+}
+
+function selectVariant(groupKey, variantId) {
+  // If old selected variant is in cart, move qty to new variant
+  const oldId = selectedVariant[groupKey];
+  const oldQty = cart[oldId] || 0;
+  selectedVariant[groupKey] = variantId;
+  if(oldQty > 0) {
+    cart[variantId] = oldQty;
+    delete cart[oldId];
+    updateCartCount();
+  }
+  renderProducts();
 }
 
 function addItem(id) {
@@ -810,21 +894,31 @@ function sendWA() {
   let delivery = itemTotal >= 500 ? 0 : 30;
   const grandTotal = itemTotal + delivery;
 
-  // ✅ WHATSAPP MESSAGE - Price nahi hai
-  let waMsg = `*🛒 JAIN STORE LALITPUR*\n`;
+  // ✅ WHATSAPP MESSAGE - Price ke saath complete bill
+  let waMsg = `*🛒 JAIN STORE — LALITPUR*\n`;
+  waMsg += `━━━━━━━━━━━━━━━━━━━━\n`;
   waMsg += `👤 *Naam:* ${currentUser.n}\n`;
   waMsg += `📞 *Phone:* ${currentUser.p}\n`;
-  waMsg += `🏠 *Address:* ${addr}\n\n`;
-  waMsg += `*📦 Ordered Items:*\n`;
-  orderedItems.forEach(item => {
-    waMsg += `✅ *${item.name}* (${item.unit}) × ${item.qty}\n`;
+  waMsg += `🏠 *Address:* ${addr}\n`;
+  waMsg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  waMsg += `*📦 Order Details:*\n\n`;
+  orderedItems.forEach((item, i) => {
+    waMsg += `${i+1}. *${item.name}* (${item.unit})\n`;
+    waMsg += `   Qty: ${item.qty} × ₹${item.price} = *₹${item.subtotal}*\n`;
   });
+  waMsg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  waMsg += `💰 Item Total: ₹${itemTotal}\n`;
+  waMsg += delivery === 0 ? `🚚 Delivery: *FREE* (₹500+ order)\n` : `🚚 Delivery: ₹${delivery}\n`;
+  waMsg += `✅ *Grand Total: ₹${grandTotal}*\n`;
+  waMsg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  waMsg += `⏰ ${new Date().toLocaleString('hi-IN')}`;
+
   waMsg += `\n⏰ ${new Date().toLocaleString('hi-IN')}`;
 
   // ✅ GOOGLE SHEET 2 (Orders) - Price ke saath (Excel mein dikhega)
   const sheetUrl = localStorage.getItem('ordSheetUrl') || ORDERS_SHEET_URL;
   if(sheetUrl) {
-    const sheetItems = orderedItems.map(i => `${i.name}(${i.unit})x${i.qty}=Rs${i.subtotal}`).join(' | ');
+    const sheetItems = orderedItems.map(i => `${i.name} (${i.unit}) x${i.qty} @Rs.${i.price} = Rs.${i.subtotal}`).join(' | ');
     const ordUrl = `${sheetUrl}?act=newOrder&orderId=${encodeURIComponent('ORD'+Date.now())}&n=${encodeURIComponent(currentUser.n)}&p=${encodeURIComponent(currentUser.p)}&addr=${encodeURIComponent(addr)}&items=${encodeURIComponent(sheetItems)}&itemTotal=${itemTotal}&delivery=${delivery}&total=${grandTotal}&date=${encodeURIComponent(new Date().toLocaleString())}`;
     fetch(ordUrl, { mode:'no-cors' }).catch(()=>{});
   }
