@@ -396,25 +396,33 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
         <div class="cat-icon" style="background:#e8f7ea; font-size:28px;">🛒</div>
         <div class="cat-label">All</div>
       </div>
-      <div class="cat-chip" data-cat="dry" onclick="filterCat('dry', this)">
-        <div class="cat-icon" style="background:#e8eaf6; font-size:28px;">🥜</div>
-        <div class="cat-label">Dry Fruits</div>
+      <div class="cat-chip" data-cat="Best Deal" onclick="filterCat('Best Deal', this)">
+        <div class="cat-icon" style="background:#fff9c4; font-size:28px;">🏷️</div>
+        <div class="cat-label">Best Deal</div>
       </div>
       <div class="cat-chip" data-cat="Mirch-Masala" onclick="filterCat('Mirch-Masala', this)">
         <div class="cat-icon" style="background:#fce4ec; font-size:28px;">🌶️</div>
         <div class="cat-label">Mirch-Masala</div>
       </div>
+      <div class="cat-chip" data-cat="Papad" onclick="filterCat('Papad', this)">
+        <div class="cat-icon" style="background:#fff3e0; font-size:28px;">🫓</div>
+        <div class="cat-label">Papad</div>
+      </div>
+      <div class="cat-chip" data-cat="Sweets & Namkeen" onclick="filterCat('Sweets & Namkeen', this)">
+        <div class="cat-icon" style="background:#fce4ec; font-size:28px;">🍬</div>
+        <div class="cat-label">Sweets &amp; Namkeen</div>
+      </div>
       <div class="cat-chip" data-cat="Pulses & Rice" onclick="filterCat('Pulses & Rice', this)">
         <div class="cat-icon" style="background:#e8eaf6; font-size:28px;">🌾</div>
-        <div class="cat-label">Pulses & Rice</div>
+        <div class="cat-label">Pulses &amp; Rice</div>
       </div>
-      <div class="cat-chip" data-cat="Soap & detergent" onclick="filterCat('Soap & detergent', this)">
+      <div class="cat-chip" data-cat="Soap & Detergent" onclick="filterCat('Soap & Detergent', this)">
         <div class="cat-icon" style="background:#f3e5f5; font-size:28px;">🧴</div>
-        <div class="cat-label">Soap & detergent</div>
+        <div class="cat-label">Soap &amp; Detergent</div>
       </div>
-      <div class="cat-chip" data-cat="oil" onclick="filterCat('oil', this)">
+      <div class="cat-chip" data-cat="Oil & Ghee" onclick="filterCat('Oil & Ghee', this)">
         <div class="cat-icon" style="background:#fffde7; font-size:28px;">🛢️</div>
-        <div class="cat-label">Oil & Ghee</div>
+        <div class="cat-label">Oil &amp; Ghee</div>
       </div>
       <div class="cat-chip" data-cat="Vegetables" onclick="filterCat('Vegetables', this)">
         <div class="cat-icon" style="background:#e8f5e9; font-size:28px;">🥦</div>
@@ -423,6 +431,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
       <div class="cat-chip" data-cat="Fruits" onclick="filterCat('Fruits', this)">
         <div class="cat-icon" style="background:#fff3e0; font-size:28px;">🍎</div>
         <div class="cat-label">Fruits</div>
+      </div>
+      <div class="cat-chip" data-cat="Pooja Items" onclick="filterCat('Pooja Items', this)">
+        <div class="cat-icon" style="background:#f9e4ff; font-size:28px;">🪔</div>
+        <div class="cat-label">Pooja Items</div>
       </div>
     </div>
 
@@ -860,7 +872,7 @@ function filterCat(cat, el) {
   currentCat = cat;
   document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
-  const labels = {all:'🛒 सभी Products', dry:'🥜 Dry Fruits', 'Mirch-Masala':'🌶️ Mirch-Masala', 'Pulses & Rice':'🌾 Pulses & Rice', seeds:'🌱 Seeds', sweets:'🍬 Sweets', oil:'🛢️ Oil & Ghee', Vegetables:'🥦 Vegetables', Fruits:'🍎 Fruits', 'Soap & detergent':'🧴 Soap & Detergent'};
+  const labels = {all:'🛒 सभी Products', 'Best Deal':'🏷️ Best Deal', 'Mirch-Masala':'🌶️ Mirch-Masala', 'Papad':'🫓 Papad', 'Sweets & Namkeen':'🍬 Sweets & Namkeen', 'Pulses & Rice':'🌾 Pulses & Rice', 'Soap & Detergent':'🧴 Soap & Detergent', 'Oil & Ghee':'🛢️ Oil & Ghee', 'Vegetables':'🥦 Vegetables', 'Fruits':'🍎 Fruits', 'Pooja Items':'🪔 Pooja Items'};
   document.getElementById('section-label').textContent = labels[cat] || 'Products';
   renderProducts();
 }
@@ -970,6 +982,7 @@ function sendWA() {
 
   let delivery = itemTotal >= 500 ? 0 : 30;
   const grandTotal = itemTotal + delivery;
+  const newOrderId = 'ORD' + Date.now(); // ✅ Scope fix — pehle define karo
 
   // ✅ WHATSAPP MESSAGE - Price ke saath complete bill
   let waMsg = `*🛒 JAIN STORE — LALITPUR*\n`;
@@ -990,20 +1003,17 @@ function sendWA() {
   waMsg += `━━━━━━━━━━━━━━━━━━━━\n`;
   waMsg += `⏰ ${new Date().toLocaleString('hi-IN')}`;
 
-  waMsg += `\n⏰ ${new Date().toLocaleString('hi-IN')}`;
-
   // ✅ GOOGLE SHEET 2 (Orders) - Price ke saath (Excel mein dikhega)
   const sheetUrl = localStorage.getItem('ordSheetUrl') || ORDERS_SHEET_URL;
   if(sheetUrl) {
     const sheetItems = orderedItems.map(i => `${i.name} (${i.unit}) x${i.qty} @Rs.${i.price} = Rs.${i.subtotal}`).join(' | ');
-    const newOrderId = 'ORD'+Date.now();
     const ordUrl = `${sheetUrl}?act=newOrder&orderId=${encodeURIComponent(newOrderId)}&n=${encodeURIComponent(currentUser.n)}&p=${encodeURIComponent(currentUser.p)}&addr=${encodeURIComponent(addr)}&items=${encodeURIComponent(sheetItems)}&itemTotal=${itemTotal}&delivery=${delivery}&total=${grandTotal}&date=${encodeURIComponent(new Date().toLocaleString())}`;
     fetch(ordUrl, { mode:'no-cors' }).catch(()=>{});
   }
 
   // ✅ LOCAL STORAGE mein save (Orders page ke liye)
   const orderData = {
-    id: typeof newOrderId !== 'undefined' ? newOrderId : 'ORD' + Date.now(),
+    id: newOrderId,
     date: new Date().toLocaleString(),
     items: orderedItems.map(i => `${i.name} (${i.unit}) x ${i.qty}`).join(', '),
     itemsWithPrice: orderedItems,
@@ -1269,17 +1279,18 @@ function downloadInvoice(orderId) {
 // Sheet 1 (Inventory) se products load karo
 // ✅ Sheet ki cat value ko code wali value mein convert karo
 function normalizeCat(cat) {
-  if(!cat) return 'dry';
+  if(!cat) return 'Best Deal';
   const c = cat.toString().toLowerCase().trim();
-  if(c.includes('dry') || c.includes('fruit') || c.includes('kaju') || c.includes('badam') || c.includes('makhana') || c.includes('kishmish')) return 'dry';
+  if(c.includes('best deal') || c.includes('best') || c.includes('deal')) return 'Best Deal';
   if(c.includes('mirch') || c.includes('masala') || c.includes('spice') || c.includes('masale') || c.includes('jeera') || c.includes('haldi') || c.includes('dhaniya') || c.includes('namak')) return 'Mirch-Masala';
+  if(c.includes('papad') || c.includes('pappad') || c.includes('papadum')) return 'Papad';
+  if(c.includes('sweet') || c.includes('mithai') || c.includes('gud') || c.includes('shakkar') || c.includes('sugar') || c.includes('chini') || c.includes('namkeen') || c.includes('nameen') || c.includes('nimkeen') || c.includes('bhujia') || c.includes('mixture') || c.includes('chivda') || c.includes('chakli') || c.includes('snack')) return 'Sweets & Namkeen';
   if(c.includes('pulse') || c.includes('dal') || c.includes('rice') || c.includes('chawal') || c.includes('chana') || c.includes('masoor') || c.includes('tur') || c.includes('urad')) return 'Pulses & Rice';
-  if(c.includes('seed') || c.includes('beej') || c.includes('chia') || c.includes('flax') || c.includes('sunflower')) return 'seeds';
-  if(c.includes('sweet') || c.includes('mithai') || c.includes('gud') || c.includes('shakkar') || c.includes('sugar') || c.includes('chini')) return 'sweets';
-  if(c.includes('oil') || c.includes('ghee') || c.includes('tel') || c.includes('butter')) return 'oil';
+  if(c.includes('soap') || c.includes('detergent') || c.includes('sabun') || c.includes('wash') || c.includes('clean') || c.includes('phenyl') || c.includes('surf') || c.includes('harpic')) return 'Soap & Detergent';
+  if(c.includes('oil') || c.includes('ghee') || c.includes('tel') || c.includes('butter') || c.includes('vanaspati')) return 'Oil & Ghee';
   if(c.includes('veg') || c.includes('sabzi') || c.includes('aalu') || c.includes('onion') || c.includes('pyaz') || c.includes('tamatar') || c.includes('tomato')) return 'Vegetables';
   if(c.includes('fruit') || c.includes('fal') || c.includes('apple') || c.includes('banana') || c.includes('kela') || c.includes('seb') || c.includes('mango') || c.includes('aam')) return 'Fruits';
-  if(c.includes('soap') || c.includes('detergent') || c.includes('sabun') || c.includes('wash') || c.includes('clean')) return 'Soap & detergent';
+  if(c.includes('pooja') || c.includes('puja') || c.includes('agarbatti') || c.includes('dhoop') || c.includes('camphor') || c.includes('kapoor') || c.includes('diya') || c.includes('prasad') || c.includes('kumkum') || c.includes('roli') || c.includes('chandan')) return 'Pooja Items';
   return cat; // as-is agar match nahi hua
 }
 
