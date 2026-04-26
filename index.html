@@ -400,6 +400,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
         <div class="cat-icon" style="background:#fff9c4; font-size:28px;">🏷️</div>
         <div class="cat-label">Best Deal</div>
       </div>
+      <div class="cat-chip" data-cat="10 Rs Items" onclick="filterCat('10 Rs Items', this)">
+        <div class="cat-icon" style="background:#e8f4fd; font-size:28px;">🪙</div>
+        <div class="cat-label">10 Rs Items</div>
+      </div>
+      <div class="cat-chip" data-cat="Dry Fruits" onclick="filterCat('Dry Fruits', this)">
+        <div class="cat-icon" style="background:#f3e0c4; font-size:28px;">🥜</div>
+        <div class="cat-label">Dry Fruits</div>
+      </div>
       <div class="cat-chip" data-cat="Mirch-Masala" onclick="filterCat('Mirch-Masala', this)">
         <div class="cat-icon" style="background:#fce4ec; font-size:28px;">🌶️</div>
         <div class="cat-label">Mirch-Masala</div>
@@ -533,7 +541,7 @@ const SHOP_WA = "919260903360";
 // Sheet 2 = Orders
 // ✅ Sheet URLs directly set hain — localStorage override bhi kaam karega
 const INVENTORY_SHEET_URL = localStorage.getItem('invSheetUrl') || 'https://script.google.com/macros/s/AKfycbyaY9xRG9jWsg611QHQWtTlCnssWPy865E85UGriBJ8ExYqfWmNPBbK76FH-t4kyTGl-g/exec';
-const ORDERS_SHEET_URL    = localStorage.getItem('ordSheetUrl') || 'https://script.google.com/macros/s/AKfycbzIo5C1QbEj1K0jywG3ln7b9ccuSTjitQjEiuwl7ITbgMb7aEsuy7xhK5aloAL8eukbXA/exec';
+const ORDERS_SHEET_URL    = localStorage.getItem('ordSheetUrl') || 'https://script.google.com/macros/s/AKfycbxCdUnyCyZYeAaCkUkj9ltoSNRjl9oUQ67q8fgLNYODZmCzvXsRoS3g0q2HRfCo7EF2rQ/exec';
 
 let cart = {};
 let currentUser = null;
@@ -672,7 +680,7 @@ function initApp(u) {
   document.getElementById('p-phone').textContent = '📞 ' + u.p;
   // ✅ Saved sheet URLs set karo (hardcoded URLs use honge automatically)
   if(!localStorage.getItem('invSheetUrl')) localStorage.setItem('invSheetUrl', 'https://script.google.com/macros/s/AKfycbyaY9xRG9jWsg611QHQWtTlCnssWPy865E85UGriBJ8ExYqfWmNPBbK76FH-t4kyTGl-g/exec');
-  if(!localStorage.getItem('ordSheetUrl')) localStorage.setItem('ordSheetUrl', 'https://script.google.com/macros/s/AKfycbzIo5C1QbEj1K0jywG3ln7b9ccuSTjitQjEiuwl7ITbgMb7aEsuy7xhK5aloAL8eukbXA/exec');
+  if(!localStorage.getItem('ordSheetUrl')) localStorage.setItem('ordSheetUrl', 'https://script.google.com/macros/s/AKfycbxCdUnyCyZYeAaCkUkj9ltoSNRjl9oUQ67q8fgLNYODZmCzvXsRoS3g0q2HRfCo7EF2rQ/exec');
   renderProducts();
   loadOrderStats();
 }
@@ -872,7 +880,7 @@ function filterCat(cat, el) {
   currentCat = cat;
   document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
-  const labels = {all:'🛒 सभी Products', 'Best Deal':'🏷️ Best Deal', 'Mirch-Masala':'🌶️ Mirch-Masala', 'Papad':'🫓 Papad', 'Sweets & Namkeen':'🍬 Sweets & Namkeen', 'Pulses & Rice':'🌾 Pulses & Rice', 'Soap & Detergent':'🧴 Soap & Detergent', 'Oil & Ghee':'🛢️ Oil & Ghee', 'Vegetables':'🥦 Vegetables', 'Fruits':'🍎 Fruits', 'Pooja Items':'🪔 Pooja Items'};
+  const labels = {all:'🛒 सभी Products', 'Best Deal':'🏷️ Best Deal', 'Mirch-Masala':'🌶️ Mirch-Masala', 'Papad':'🫓 Papad', 'Sweets & Namkeen':'🍬 Sweets & Namkeen', 'Pulses & Rice':'🌾 Pulses & Rice', 'Soap & Detergent':'🧴 Soap & Detergent', 'Oil & Ghee':'🛢️ Oil & Ghee', 'Vegetables':'🥦 Vegetables', 'Fruits':'🍎 Fruits', 'Pooja Items':'🪔 Pooja Items', 'Dry Fruits':'🥜 Dry Fruits', '10 Rs Items':'🪙 10 Rs Items'};
   document.getElementById('section-label').textContent = labels[cat] || 'Products';
   renderProducts();
 }
@@ -1291,6 +1299,8 @@ function normalizeCat(cat) {
   if(c.includes('veg') || c.includes('sabzi') || c.includes('aalu') || c.includes('onion') || c.includes('pyaz') || c.includes('tamatar') || c.includes('tomato')) return 'Vegetables';
   if(c.includes('fruit') || c.includes('fal') || c.includes('apple') || c.includes('banana') || c.includes('kela') || c.includes('seb') || c.includes('mango') || c.includes('aam')) return 'Fruits';
   if(c.includes('pooja') || c.includes('puja') || c.includes('agarbatti') || c.includes('dhoop') || c.includes('camphor') || c.includes('kapoor') || c.includes('diya') || c.includes('prasad') || c.includes('kumkum') || c.includes('roli') || c.includes('chandan')) return 'Pooja Items';
+  if(c.includes('dry') || c.includes('kaju') || c.includes('badam') || c.includes('kismis') || c.includes('kishmish') || c.includes('pista') || c.includes('akhrot') || c.includes('anjeer') || c.includes('makhana') || c.includes('cashew') || c.includes('almond') || c.includes('walnut')) return 'Dry Fruits';
+  if(c.includes('10 rs') || c.includes('10rs') || c.includes('ten rs') || c.includes('10 rupee') || c.includes('10rupee') || c.includes('dus rs') || c.includes('dus rupee')) return '10 Rs Items';
   return cat; // as-is agar match nahi hua
 }
 
@@ -1392,30 +1402,90 @@ function doGet(e) {
 }
 
 ===========================================================
-SHEET 2 — ORDERS — Apps Script Code:
+SHEET 2 — ORDERS — Apps Script Code (UPDATED - Proper Bill):
 ===========================================================
-Auto columns: Order ID | Customer | Phone | Address | Items | Item Total | Delivery | Grand Total | Date
+Auto columns: Order ID | Customer | Phone | Address | Items Detail | Item Total | Delivery | Grand Total | Date | Bill Receipt
 
 function doGet(e) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName('Orders');
   if (!sheet) {
     sheet = ss.insertSheet('Orders');
-    const headers = ['Order ID','Customer','Phone','Address','Items','Item Total','Delivery','Grand Total','Date'];
+    const headers = ['Order ID','Customer Name','Phone','Delivery Address','Items (Detail)','Item Total (₹)','Delivery (₹)','Grand Total (₹)','Order Date','Bill Receipt'];
     sheet.appendRow(headers);
-    sheet.getRange(1,1,1,9).setFontWeight('bold').setBackground('#0c831f').setFontColor('#ffffff');
+    const hRange = sheet.getRange(1,1,1,10);
+    hRange.setFontWeight('bold').setBackground('#0c831f').setFontColor('#ffffff').setFontSize(11);
     sheet.setFrozenRows(1);
+    sheet.setColumnWidth(1, 160);
+    sheet.setColumnWidth(2, 140);
+    sheet.setColumnWidth(3, 120);
+    sheet.setColumnWidth(4, 200);
+    sheet.setColumnWidth(5, 350);
+    sheet.setColumnWidth(6, 110);
+    sheet.setColumnWidth(7, 110);
+    sheet.setColumnWidth(8, 120);
+    sheet.setColumnWidth(9, 160);
+    sheet.setColumnWidth(10, 300);
   }
 
   const p = e.parameter;
 
   if (p.act === 'newOrder') {
-    sheet.appendRow([p.orderId, p.n, p.p, p.addr, p.items,
-      Number(p.itemTotal), Number(p.delivery), Number(p.total), p.date]);
-    sheet.autoResizeColumns(1, 9);
+    const lastRow = sheet.getLastRow() + 1;
+
+    // Items detail — pipe separated
+    const itemsText = decodeURIComponent(p.items || '');
+
+    // Bill Receipt — readable format in one cell
+    const itemLines = itemsText.split(' | ');
+    let billText = '=== JAIN STORE BILL ===\n';
+    billText += 'Order: ' + p.orderId + '\n';
+    billText += 'Customer: ' + p.n + ' | Ph: ' + p.p + '\n';
+    billText += 'Address: ' + decodeURIComponent(p.addr || '') + '\n';
+    billText += '------------------------\n';
+    itemLines.forEach((line, i) => { billText += (i+1) + '. ' + line + '\n'; });
+    billText += '------------------------\n';
+    billText += 'Item Total: Rs.' + p.itemTotal + '\n';
+    billText += 'Delivery:   Rs.' + (p.delivery == 0 ? '0 (FREE)' : p.delivery) + '\n';
+    billText += 'GRAND TOTAL: Rs.' + p.total + '\n';
+    billText += 'Date: ' + decodeURIComponent(p.date || '') + '\n';
+    billText += '========================';
+
+    sheet.appendRow([
+      p.orderId,
+      p.n,
+      p.p,
+      decodeURIComponent(p.addr || ''),
+      itemsText,
+      Number(p.itemTotal),
+      Number(p.delivery),
+      Number(p.total),
+      decodeURIComponent(p.date || ''),
+      billText
+    ]);
+
+    // Format new row
+    const newRow = sheet.getLastRow();
+    sheet.getRange(newRow, 6, 1, 3).setNumberFormat('₹#,##0.00');
+    sheet.getRange(newRow, 8).setFontWeight('bold').setFontColor('#0c831f');
+    sheet.autoResizeColumns(1, 10);
+
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'saved' }))
       .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // 2705 NAYA 2014 Bill Generator ke liye sabhi orders return karo
+  if (p.act === 'getOrders') {
+    const data = sheet.getDataRange().getValues();
+    if (data.length <= 1) {
+      return ContentService.createTextOutput(JSON.stringify({ orders: [] })).setMimeType(ContentService.MimeType.JSON);
+    }
+    const orders = data.slice(1).map(row => ({
+      id: row[0], name: row[1], phone: row[2], addr: row[3],
+      items: row[4], itemTotal: row[5], delivery: row[6], total: row[7], date: row[8]
+    })).filter(o => o.id);
+    return ContentService.createTextOutput(JSON.stringify({ orders })).setMimeType(ContentService.MimeType.JSON);
   }
 
   if (p.act === 'Login') {
